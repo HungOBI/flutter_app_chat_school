@@ -2,9 +2,8 @@
 
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:get/state_manager.dart';
-
 import '../../../data_fake/question.dart';
+import '../score_screen.dart';
 
 class QuestionController extends GetxController
     with GetSingleTickerProviderStateMixin {
@@ -66,7 +65,7 @@ class QuestionController extends GetxController
 
     _animationController.stop();
     update();
-    Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(Duration(seconds: 1), () {
       nextQuestion();
     });
   }
@@ -79,7 +78,7 @@ class QuestionController extends GetxController
       _animationController.reset();
       _animationController.forward().whenComplete(nextQuestion);
     } else {
-      //
+      Get.to(ScoreScreen());
     }
   }
 

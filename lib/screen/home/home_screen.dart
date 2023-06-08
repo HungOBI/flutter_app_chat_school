@@ -1,5 +1,6 @@
 // ignore_for_file: unused_field, unused_local_variable, library_private_types_in_public_api, unnecessary_string_interpolations, unnecessary_cast
 
+import 'package:app_chat/screen/auth/change_password.dart';
 import 'package:app_chat/screen/auth/login_screen.dart';
 import 'package:app_chat/screen/quiz/quiz_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -95,8 +96,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       child: CircleAvatar(
                         radius: 58,
-                        backgroundImage:
-                            NetworkImage(_userImage) as ImageProvider,
+                        // backgroundImage:
+                        //     NetworkImage(_userImage) as ImageProvider,
                       ),
                     ),
                   )
@@ -164,8 +165,17 @@ class _HomeScreenState extends State<HomeScreen> {
                         text: 'Leave Application',
                         imagePath: 'assets/images/ic_leave_home.png'),
                     customCard(
-                        text: 'Change Password',
-                        imagePath: 'assets/images/ic_password_home.png'),
+                      text: 'Change Password',
+                      imagePath: 'assets/images/ic_password_home.png',
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  const ChangePasswordScreen()),
+                        );
+                      },
+                    ),
                     customCard(
                         text: 'Events',
                         imagePath: 'assets/images/ic_date_sheet_home.png'),
