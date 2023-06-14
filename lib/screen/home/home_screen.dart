@@ -27,6 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
   late String _rollNo = '';
   late String _academicYear = '';
   late bool _isLoading = true;
+  static int i = 0;
   @override
   void initState() {
     super.initState();
@@ -144,11 +145,20 @@ class _HomeScreenState extends State<HomeScreen> {
                             text: 'Play Quiz',
                             imagePath: 'assets/images/ic_quiz_home.png',
                             onTap: () {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const QuizScreen()),
-                              );
+                              i++;
+                              if (i <= 1) {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const QuizScreen()),
+                                );
+                              } else {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ScoreScreen()),
+                                );
+                              }
                             },
                           ),
                           customCard(
