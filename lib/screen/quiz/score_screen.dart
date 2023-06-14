@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../home/home_screen.dart';
 import 'controllers/question_controller.dart';
 
@@ -36,11 +35,15 @@ class ScoreScreen extends StatelessWidget {
               ),
               const Spacer(),
               ElevatedButton(
-                onPressed: () {
-                  Get.to(const HomeScreen());
-                },
-                child: const Text('Out Home Screen'),
-              ),
+                  onPressed: () {
+                    // Get.to(const HomeScreen());
+                    var i = 0;
+                    Navigator.of(context).popUntil((pre) {
+                      i++;
+                      return i > 1;
+                    });
+                  },
+                  child: const Text('Out Home Screen')),
               const Spacer(),
             ],
           )
