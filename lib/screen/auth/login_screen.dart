@@ -142,7 +142,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     // password
                     TextFormField(
                       controller: _passwordController,
-                      obscureText: true,
+                      obscureText: obscurePassword,
                       decoration: InputDecoration(
                         border: const UnderlineInputBorder(
                           borderSide: BorderSide(
