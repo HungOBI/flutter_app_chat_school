@@ -1,5 +1,6 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers, use_key_in_widget_constructors
 
+import 'package:app_chat/screen/quiz/quiz_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../home/home_screen.dart';
@@ -33,15 +34,22 @@ class ScoreScreen extends StatelessWidget {
                   color: Color.fromRGBO(255, 255, 255, 1),
                 ),
               ),
+              ElevatedButton(
+                onPressed: () {
+                  Get.offAll(() => QuizScreen());
+                },
+                child: const Text('Answer Again'),
+              ),
               const Spacer(),
               ElevatedButton(
                   onPressed: () {
-                    // Get.to(const HomeScreen());
-                    var i = 0;
-                    Navigator.of(context).popUntil((pre) {
-                      i++;
-                      return i > 1;
-                    });
+                    Get.offAll(const HomeScreen());
+
+                    // var i = 0;
+                    // Navigator.of(context).popUntil((pre) {
+                    //   i++;
+                    //   return i > 1;
+                    // });
                   },
                   child: const Text('Out Home Screen')),
               const Spacer(),

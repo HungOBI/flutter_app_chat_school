@@ -21,22 +21,6 @@ class QuestionController extends GetxController
             answer_index: question['answer_index']),
       )
       .toList();
-
-  @override
-  void onInit() {
-    _animationController =
-        AnimationController(duration: Duration(seconds: 10), vsync: this);
-    _animation = Tween<double>(begin: 0, end: 1).animate(_animationController)
-      ..addListener(() {
-        update();
-      });
-
-    _animationController.forward().whenComplete(nextQuestion);
-    _pageController = PageController();
-
-    super.onInit();
-  }
-
   late PageController _pageController;
   PageController get pageController => _pageController;
 
@@ -56,6 +40,28 @@ class QuestionController extends GetxController
 
   int _numOfCorrectAns = 0;
   int get numOfCorrectAns => this._numOfCorrectAns;
+  @override
+  void onInit() {
+    _animationController =
+        AnimationController(duration: Duration(seconds: 10), vsync: this);
+    _animation = Tween<double>(begin: 0, end: 1).animate(_animationController)
+      ..addListener(() {
+        update();
+      });
+
+    _animationController.forward().whenComplete(nextQuestion);
+    _pageController = PageController();
+
+    super.onInit();
+  }
+
+  @override
+  void onClose() {
+    super.onClose();
+    _animationController.dispose();
+    _pageController.dispose();
+  }
+
   void checkAns(Question question, int selectedIndex) {
     _isAnswered = true;
     _correctAns = question.answer_index;
@@ -78,15 +84,9 @@ class QuestionController extends GetxController
       _animationController.reset();
       _animationController.forward().whenComplete(nextQuestion);
     } else {
-      Get.off(ScoreScreen());
+      Get.to(ScoreScreen());
+      // Get.reset();
     }
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
-    _animationController.dispose();
-    _pageController.dispose();
   }
 
   void updateTheQnNum(int index) {
