@@ -7,7 +7,6 @@ import 'package:app_chat/screen/quiz/quiz_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 import '../quiz/score_screen.dart';
 import 'custom_home/custom_card_homescreen.dart';
@@ -57,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Hi $_username!',
+                              'Hi $_username',
                               style: const TextStyle(
                                 fontSize: 30,
                                 color: Color.fromRGBO(255, 255, 255, 1),
@@ -156,7 +155,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => ScoreScreen()),
+                                      builder: (context) =>
+                                          const ScoreScreen()),
                                 );
                               }
                             },

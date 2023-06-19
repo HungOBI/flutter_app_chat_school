@@ -40,6 +40,7 @@ class QuestionController extends GetxController
 
   int _numOfCorrectAns = 0;
   int get numOfCorrectAns => this._numOfCorrectAns;
+
   @override
   void onInit() {
     _animationController =
@@ -51,7 +52,6 @@ class QuestionController extends GetxController
 
     _animationController.forward().whenComplete(nextQuestion);
     _pageController = PageController();
-
     super.onInit();
   }
 
@@ -84,9 +84,17 @@ class QuestionController extends GetxController
       _animationController.reset();
       _animationController.forward().whenComplete(nextQuestion);
     } else {
-      Get.to(ScoreScreen());
+      Get.offAll(ScoreScreen());
       // Get.reset();
     }
+  }
+
+  void resetQuiz() {
+    _questionNumber.value = 1;
+    _numOfCorrectAns = 0;
+    _pageController.jumpToPage(0);
+    _animationController.reset();
+    _animationController.forward().whenComplete(nextQuestion);
   }
 
   void updateTheQnNum(int index) {

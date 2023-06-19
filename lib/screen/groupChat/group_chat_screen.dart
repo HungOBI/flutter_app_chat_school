@@ -16,6 +16,21 @@ class GroupChatScreen extends StatefulWidget {
 
 class _GroupChatScreenState extends State<GroupChatScreen> {
   final TextEditingController _messageController = TextEditingController();
+  late Stream<QuerySnapshot> _messagesStream;
+  bool _isStreamInitialized = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeMessagesStream();
+  }
+
+  Future<void> _initializeMessagesStream() async {
+    _messagesStream = _messagesCollection.orderBy('timestamp').snapshots();
+    setState(() {
+      _isStreamInitialized = true;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,90 +49,112 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
       body: Column(
         children: <Widget>[
           Expanded(
-            child: StreamBuilder<QuerySnapshot>(
-              stream: _messagesCollection.orderBy('timestamp').snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  final messages = snapshot.data!.docs;
-                  return ListView.builder(
-                    reverse: true,
-                    itemCount: messages.length,
-                    itemBuilder: (context, index) {
-                      final message = messages[index];
-                      final senderUid = message['uid'];
-                      final content = message['message'];
-                      final currentUser = FirebaseAuth.instance.currentUser;
+            child: _isStreamInitialized
+                ? StreamBuilder<QuerySnapshot>(
+                    stream: _messagesStream,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        final messages = snapshot.data!.docs.reversed.toList();
 
-                      return FutureBuilder<DocumentSnapshot>(
-                        future: _usersCollection.doc(senderUid).get(),
-                        builder: (context, userSnapshot) {
-                          if (userSnapshot.hasData) {
-                            final user = userSnapshot.data!.data()
-                                as Map<String, dynamic>;
-                            final displayName = user['displayName'];
-                            final photoURL = user['photoURL'];
+                        return ListView.builder(
+                          reverse: true,
+                          itemCount: messages.length,
+                          itemBuilder: (context, index) {
+                            final message = messages[index];
 
-                            return Container(
-                              margin: const EdgeInsets.symmetric(vertical: 4),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  if (currentUser != null &&
-                                      currentUser.uid != senderUid)
-                                    CircleAvatar(
-                                      backgroundImage: NetworkImage(photoURL),
-                                    ),
-                                  Expanded(
-                                    child: Container(
-                                      padding: const EdgeInsets.all(8),
-                                      decoration: BoxDecoration(
-                                        color: currentUser != null &&
-                                                currentUser.uid == senderUid
-                                            ? Colors.grey[300]
-                                            : Colors.blue[300],
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          if (currentUser != null &&
-                                              currentUser.uid != senderUid)
-                                            Text(
-                                              displayName ?? '',
-                                              style: const TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                              ),
+                            final content = message['message'];
+                            final currentUser =
+                                FirebaseAuth.instance.currentUser;
+
+                            final isSentByMe = currentUser != null;
+                            print('$content');
+
+                            return FutureBuilder<DocumentSnapshot>(
+                              builder: (context, userSnapshot) {
+                                print('hasData: ${userSnapshot.hasData}');
+                                print('data: ${userSnapshot.data}');
+                                if (userSnapshot.hasData &&
+                                    userSnapshot.data != null) {
+                                  final user = userSnapshot.data!;
+
+                                  final displayName = user['senderName'];
+                                  final photoURL = user['senderPhotoURL'];
+                                  print('displayName');
+                                  return Container(
+                                    margin:
+                                        const EdgeInsets.symmetric(vertical: 4),
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        if (!isSentByMe)
+                                          CircleAvatar(
+                                            backgroundImage:
+                                                NetworkImage(photoURL),
+                                          ),
+                                        Expanded(
+                                          child: Container(
+                                            padding: const EdgeInsets.all(8),
+                                            decoration: BoxDecoration(
+                                              color: isSentByMe
+                                                  ? Colors.grey[300]
+                                                  : Colors.blue[300],
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
                                             ),
-                                          const SizedBox(height: 4),
-                                          Text(
-                                            content ?? '',
-                                            style: const TextStyle(
-                                              color: Colors.black,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                if (!isSentByMe)
+                                                  Text(
+                                                    '$displayName',
+                                                    style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                const SizedBox(height: 4),
+                                                Text(
+                                                  '$content',
+                                                  style: const TextStyle(
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                        if (isSentByMe)
+                                          CircleAvatar(
+                                            backgroundImage:
+                                                NetworkImage(photoURL),
+                                          ),
+                                      ],
                                     ),
-                                  ),
-                                  if (currentUser != null &&
-                                      currentUser.uid == senderUid)
-                                    CircleAvatar(
-                                      backgroundImage: NetworkImage(photoURL),
-                                    ),
-                                ],
-                              ),
+                                  );
+                                } else {
+                                  print('not data');
+                                }
+                                return const SizedBox(
+                                  child: Text('data11'),
+                                );
+                              },
                             );
-                          }
-                          return const SizedBox();
-                        },
-                      );
+                          },
+                        );
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else {
+                        return const SizedBox(
+                          child: Text('data'),
+                        );
+                      }
                     },
-                  );
-                }
-                return const SizedBox();
-              },
-            ),
+                  )
+                : Center(
+                    child: CircularProgressIndicator(),
+                  ),
           ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
@@ -138,11 +175,11 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
                 ),
                 const SizedBox(width: 12),
                 GestureDetector(
-                  onTap: () {
+                  onTap: () async {
                     final message = _messageController.text.trim();
                     if (message.isNotEmpty) {
-                      sendMessage(message);
                       _messageController.clear();
+                      await sendMessage(message);
                     }
                   },
                   child: Container(
@@ -169,24 +206,27 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
   }
 
   Future<void> sendMessage(String message) async {
-    final user = FirebaseAuth.instance.currentUser;
+    String? user = FirebaseAuth.instance.currentUser!.email;
     if (user != null) {
-      final uid = user.uid;
       final timestamp = DateTime.now();
 
-      await _messagesCollection.add({
-        'uid': uid,
-        'message': message,
-        'timestamp': timestamp,
-      });
-    }
-  }
+      QuerySnapshot userQuerySnapshot =
+          await _usersCollection.where('email', isEqualTo: user).get();
 
-  Future<Map<String, dynamic>> getUserInfo(String email) async {
-    final querySnapshot =
-        await _usersCollection.where('email', isEqualTo: email).get();
-    final user = querySnapshot.docs.first.data() as Map<String, dynamic>;
-    return user;
+      if (userQuerySnapshot.docs.isNotEmpty) {
+        final userDocumentSnapshot = userQuerySnapshot.docs.first;
+
+        String displayName = userDocumentSnapshot.get('name');
+        String photoURL = userDocumentSnapshot.get('image');
+
+        await _messagesCollection.add({
+          'message': message,
+          'timestamp': timestamp,
+          'senderName': displayName,
+          'senderPhotoURL': photoURL,
+        });
+      }
+    }
   }
 
   @override

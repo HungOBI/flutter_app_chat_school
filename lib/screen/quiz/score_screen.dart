@@ -1,12 +1,18 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers, use_key_in_widget_constructors
 
-import 'package:app_chat/screen/quiz/quiz_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../home/home_screen.dart';
 import 'controllers/question_controller.dart';
 
-class ScoreScreen extends StatelessWidget {
+class ScoreScreen extends StatefulWidget {
+  const ScoreScreen({super.key});
+
+  @override
+  State<ScoreScreen> createState() => _ScoreScreenState();
+}
+
+class _ScoreScreenState extends State<ScoreScreen> {
   @override
   Widget build(BuildContext context) {
     QuestionController _qnController = Get.put(QuestionController());
@@ -36,7 +42,12 @@ class ScoreScreen extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () {
-                  Get.offAll(() => QuizScreen());
+                  Get.offAllNamed('/');
+                  // var i = 0;
+                  // Navigator.of(context).popUntil((pre) {
+                  //   i++;
+                  //   return i > 1;
+                  // });
                 },
                 child: const Text('Answer Again'),
               ),
@@ -44,12 +55,6 @@ class ScoreScreen extends StatelessWidget {
               ElevatedButton(
                   onPressed: () {
                     Get.offAll(const HomeScreen());
-
-                    // var i = 0;
-                    // Navigator.of(context).popUntil((pre) {
-                    //   i++;
-                    //   return i > 1;
-                    // });
                   },
                   child: const Text('Out Home Screen')),
               const Spacer(),
