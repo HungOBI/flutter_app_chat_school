@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import 'message_tile.dart';
+
 final CollectionReference _messagesCollection =
     FirebaseFirestore.instance.collection('group_chat_messages');
 final CollectionReference _usersCollection =
@@ -15,9 +17,11 @@ class GroupChatScreen extends StatefulWidget {
 }
 
 class _GroupChatScreenState extends State<GroupChatScreen> {
+  late String _nameSender = '';
+  bool _isStreamInitialized = false;
   final TextEditingController _messageController = TextEditingController();
   late Stream<QuerySnapshot> _messagesStream;
-  bool _isStreamInitialized = false;
+  DocumentSnapshot? _userSnapshot;
 
   @override
   void initState() {
@@ -25,10 +29,36 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
     _initializeMessagesStream();
   }
 
+  Future<DocumentSnapshot?> getUserData() async {
+    String? user = FirebaseAuth.instance.currentUser!.email;
+    if (user != null) {
+      QuerySnapshot userQuerySnapshot = await _messagesCollection
+          .where('senderEmail', isEqualTo: user)
+          .limit(1)
+          .get();
+
+      if (userQuerySnapshot.docs.isNotEmpty) {
+        DocumentSnapshot userDocumentSnapshot = userQuerySnapshot.docs.first;
+        return userDocumentSnapshot;
+      }
+    }
+    return null;
+  }
+
   Future<void> _initializeMessagesStream() async {
     _messagesStream = _messagesCollection.orderBy('timestamp').snapshots();
+    DocumentSnapshot? userSnapshot = await getUserData();
+    if (userSnapshot != null) {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null && user.email == userSnapshot['senderEmail']) {
+        setState(() {
+          _nameSender = userSnapshot['senderName'];
+        });
+      }
+    }
     setState(() {
       _isStreamInitialized = true;
+      _userSnapshot = userSnapshot;
     });
   }
 
@@ -53,108 +83,32 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
                 ? StreamBuilder<QuerySnapshot>(
                     stream: _messagesStream,
                     builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        final messages = snapshot.data!.docs.reversed.toList();
+                      return snapshot.hasData
+                          ? ListView.builder(
+                              itemCount: snapshot.data?.docs.length,
+                              itemBuilder: (context, index) {
+                                final message = snapshot.data?.docs[index];
+                                final senderName = message?['senderName'];
+                                final isSentByMe = _nameSender == senderName;
 
-                        return ListView.builder(
-                          reverse: true,
-                          itemCount: messages.length,
-                          itemBuilder: (context, index) {
-                            final message = messages[index];
-
-                            final content = message['message'];
-                            final currentUser =
-                                FirebaseAuth.instance.currentUser;
-
-                            final isSentByMe = currentUser != null;
-                            print('$content');
-
-                            return FutureBuilder<DocumentSnapshot>(
-                              builder: (context, userSnapshot) {
-                                print('hasData: ${userSnapshot.hasData}');
-                                print('data: ${userSnapshot.data}');
-                                if (userSnapshot.hasData &&
-                                    userSnapshot.data != null) {
-                                  final user = userSnapshot.data!;
-
-                                  final displayName = user['senderName'];
-                                  final photoURL = user['senderPhotoURL'];
-                                  print('displayName');
-                                  return Container(
-                                    margin:
-                                        const EdgeInsets.symmetric(vertical: 4),
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        if (!isSentByMe)
-                                          CircleAvatar(
-                                            backgroundImage:
-                                                NetworkImage(photoURL),
-                                          ),
-                                        Expanded(
-                                          child: Container(
-                                            padding: const EdgeInsets.all(8),
-                                            decoration: BoxDecoration(
-                                              color: isSentByMe
-                                                  ? Colors.grey[300]
-                                                  : Colors.blue[300],
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                            ),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                if (!isSentByMe)
-                                                  Text(
-                                                    '$displayName',
-                                                    style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                const SizedBox(height: 4),
-                                                Text(
-                                                  '$content',
-                                                  style: const TextStyle(
-                                                    color: Colors.black,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        if (isSentByMe)
-                                          CircleAvatar(
-                                            backgroundImage:
-                                                NetworkImage(photoURL),
-                                          ),
-                                      ],
-                                    ),
-                                  );
-                                } else {
-                                  print('not data');
-                                }
-                                return const SizedBox(
-                                  child: Text('data11'),
+                                return GestureDetector(
+                                  onTap: () {
+                                    _handleMessageTap(senderName);
+                                  },
+                                  child: MessageTile(
+                                    message: message?['message'],
+                                    sender: senderName,
+                                    sentByMe: isSentByMe,
+                                  ),
                                 );
                               },
+                            )
+                          : const Center(
+                              child: CircularProgressIndicator(),
                             );
-                          },
-                        );
-                      } else if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
-                      } else {
-                        return const SizedBox(
-                          child: Text('data'),
-                        );
-                      }
                     },
                   )
-                : Center(
-                    child: CircularProgressIndicator(),
-                  ),
+                : Container(),
           ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
@@ -218,8 +172,12 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
 
         String displayName = userDocumentSnapshot.get('name');
         String photoURL = userDocumentSnapshot.get('image');
+        setState(() {
+          _nameSender = displayName;
+        });
 
         await _messagesCollection.add({
+          'senderEmail': user,
           'message': message,
           'timestamp': timestamp,
           'senderName': displayName,
@@ -227,6 +185,10 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
         });
       }
     }
+  }
+
+  void _handleMessageTap(String? senderName) {
+    // Xử lý khi người dùng nhấn vào tin nhắn
   }
 
   @override
