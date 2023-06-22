@@ -29,9 +29,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
     final fcm = FirebaseMessaging.instance;
 
     await fcm.requestPermission();
-    final token = await fcm.getToken();
-    print('tokeeeeee  ');
-    print(token);
+    fcm.subscribeToTopic('chat');
   }
 
   @override

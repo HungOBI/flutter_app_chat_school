@@ -3,6 +3,7 @@
 import 'package:app_chat/screen/auth/change_password.dart';
 import 'package:app_chat/screen/auth/login_screen.dart';
 import 'package:app_chat/screen/groupChat/group_chat_screen.dart';
+import 'package:app_chat/screen/profile/profile_screen.dart';
 import 'package:app_chat/screen/quiz/quiz_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -164,8 +165,16 @@ class _HomeScreenState extends State<HomeScreen> {
                             },
                           ),
                           customCard(
-                              text: 'Assignment',
-                              imagePath: 'assets/images/ic_results_home.png'),
+                            text: 'Assignment',
+                            imagePath: 'assets/images/ic_assignment.png',
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const ProfileScreen()));
+                            },
+                          ),
                           customCard(
                               text: 'School Holiday',
                               imagePath: 'assets/images/ic_results_home.png'),
