@@ -43,6 +43,8 @@ dependencies:
   firebase_storage: ^11.2.2
   get: ^4.6.5
   flutter_local_notifications: ^14.1.1
+  firebase_messaging: ^14.6.3
+  firebase_messaging_web: ^3.5.3
 
 dev_dependencies:
   flutter_test:

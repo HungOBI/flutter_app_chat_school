@@ -1,3 +1,6 @@
+// ignore_for_file: unused_field
+
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -22,10 +25,19 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
   final TextEditingController _messageController = TextEditingController();
   late Stream<QuerySnapshot> _messagesStream;
   DocumentSnapshot? _userSnapshot;
+  void setupPushNotifications() async {
+    final fcm = FirebaseMessaging.instance;
+
+    await fcm.requestPermission();
+    final token = await fcm.getToken();
+    print('tokeeeeee  ');
+    print(token);
+  }
 
   @override
   void initState() {
     super.initState();
+    setupPushNotifications();
     _initializeMessagesStream();
   }
 
@@ -111,6 +123,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
                 : Container(),
           ),
           Container(
+            margin: const EdgeInsets.only(top: 5),
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
             width: MediaQuery.of(context).size.width,
             color: const Color.fromARGB(255, 62, 85, 134),
@@ -187,9 +200,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
     }
   }
 
-  void _handleMessageTap(String? senderName) {
-    // Xử lý khi người dùng nhấn vào tin nhắn
-  }
+  void _handleMessageTap(String? senderName) {}
 
   @override
   void dispose() {

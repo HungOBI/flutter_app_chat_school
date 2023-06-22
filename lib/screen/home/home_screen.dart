@@ -1,4 +1,4 @@
-// ignore_for_file: unused_field, unused_local_variable, library_private_types_in_public_api, unnecessary_string_interpolations, unnecessary_cast
+// ignore_for_file: unused_field, unused_local_variable, library_private_types_in_public_api, unnecessary_string_interpolations, unnecessary_cast, use_build_context_synchronously
 
 import 'package:app_chat/screen/auth/change_password.dart';
 import 'package:app_chat/screen/auth/login_screen.dart';
@@ -6,6 +6,7 @@ import 'package:app_chat/screen/groupChat/group_chat_screen.dart';
 import 'package:app_chat/screen/quiz/quiz_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 import '../quiz/score_screen.dart';
@@ -30,6 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+
     getUserData();
   }
 
@@ -179,7 +181,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   'assets/images/ic_date_sheet_home.png'),
                           customCard(
                             text: 'Ask Doubts',
-                            imagePath: 'assets/images/ic_Group_home.png',
+                            imagePath: 'assets/images/ic_doubts_home.png',
                             onTap: () {
                               Navigator.push(
                                 context,
@@ -236,8 +238,6 @@ class _HomeScreenState extends State<HomeScreen> {
     await HelperFunctions.saveUserNameSF('');
     await HelperFunctions.saveUserEmailSF('');
 
-    // Navigate back to LoginScreen and remove all previous routes
-    // ignore: use_build_context_synchronously
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => const LoginScreen()),
