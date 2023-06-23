@@ -7,7 +7,7 @@ import 'package:app_chat/screen/profile/profile_screen.dart';
 import 'package:app_chat/screen/quiz/quiz_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+
 import 'package:flutter/material.dart';
 
 import '../quiz/score_screen.dart';
