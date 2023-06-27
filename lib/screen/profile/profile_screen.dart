@@ -243,7 +243,7 @@ class _ProfileScreen extends State<ProfileScreen> {
     await FirebaseFirestore.instance
         .collection('users')
         .doc(userEmail)
-        .update({'image': newImagePath});
+        .update({'image': imageUrl});
 
     setState(() {
       _userImage = imageUrl;

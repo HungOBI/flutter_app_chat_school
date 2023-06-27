@@ -5,6 +5,7 @@ import 'package:app_chat/screen/auth/login_screen.dart';
 import 'package:app_chat/screen/groupChat/group_chat_screen.dart';
 import 'package:app_chat/screen/profile/profile_screen.dart';
 import 'package:app_chat/screen/quiz/quiz_screen.dart';
+import 'package:app_chat/screen/timeTable/time_table_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -179,8 +180,15 @@ class _HomeScreenState extends State<HomeScreen> {
                               text: 'School Holiday',
                               imagePath: 'assets/images/ic_results_home.png'),
                           customCard(
-                              text: 'Time Table',
-                              imagePath: 'assets/images/ic_calendra_home.png'),
+                            text: 'Time Table',
+                            imagePath: 'assets/images/ic_calendra_home.png',
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => TimeTableScreen()));
+                            },
+                          ),
                           customCard(
                               text: 'Result',
                               imagePath: 'assets/images/ic_results_home.png'),
