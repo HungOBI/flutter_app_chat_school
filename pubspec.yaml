@@ -47,6 +47,8 @@ dependencies:
   firebase_messaging_web: ^3.5.3
   image_picker: ^0.8.9
   table_calendar: ^3.0.9
+  sqflite: ^2.2.8+4
+  uuid: ^3.0.7
 
 dev_dependencies:
   flutter_test:

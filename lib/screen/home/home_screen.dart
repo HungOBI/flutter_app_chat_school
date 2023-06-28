@@ -5,13 +5,14 @@ import 'package:app_chat/screen/auth/login_screen.dart';
 import 'package:app_chat/screen/groupChat/group_chat_screen.dart';
 import 'package:app_chat/screen/profile/profile_screen.dart';
 import 'package:app_chat/screen/quiz/quiz_screen.dart';
-import 'package:app_chat/screen/timeTable/time_table_screen.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
 
 import '../quiz/score_screen.dart';
+import '../time/time_table_screen.dart';
 import 'custom_home/custom_card_homescreen.dart';
 import 'helper/helper_foundation.dart';
 
@@ -176,9 +177,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                           const ProfileScreen()));
                             },
                           ),
-                          customCard(
-                              text: 'School Holiday',
-                              imagePath: 'assets/images/ic_results_home.png'),
+                          // customCard(
+                          //     text: 'School Holiday',
+                          //     imagePath: 'assets/images/ic_results_home.png'),
                           customCard(
                             text: 'Time Table',
                             imagePath: 'assets/images/ic_calendra_home.png',
@@ -186,16 +187,17 @@ class _HomeScreenState extends State<HomeScreen> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => TimeTableScreen()));
+                                      builder: (context) =>
+                                          const TimeTableScreen()));
                             },
                           ),
-                          customCard(
-                              text: 'Result',
-                              imagePath: 'assets/images/ic_results_home.png'),
-                          customCard(
-                              text: 'Date Sheet',
-                              imagePath:
-                                  'assets/images/ic_date_sheet_home.png'),
+                          // customCard(
+                          //     text: 'Result',
+                          //     imagePath: 'assets/images/ic_results_home.png'),
+                          // customCard(
+                          //     text: 'Date Sheet',
+                          //     imagePath:
+                          //         'assets/images/ic_date_sheet_home.png'),
                           customCard(
                             text: 'Ask Doubts',
                             imagePath: 'assets/images/ic_doubts_home.png',
@@ -208,12 +210,12 @@ class _HomeScreenState extends State<HomeScreen> {
                               );
                             },
                           ),
-                          customCard(
-                              text: 'School Gallery',
-                              imagePath: 'assets/images/ic_gallery_home.png'),
-                          customCard(
-                              text: 'Leave Application',
-                              imagePath: 'assets/images/ic_leave_home.png'),
+                          // customCard(
+                          //     text: 'School Gallery',
+                          //     imagePath: 'assets/images/ic_gallery_home.png'),
+                          // customCard(
+                          //     text: 'Leave Application',
+                          //     imagePath: 'assets/images/ic_leave_home.png'),
                           customCard(
                             text: 'Change Password',
                             imagePath: 'assets/images/ic_password_home.png',
@@ -226,10 +228,10 @@ class _HomeScreenState extends State<HomeScreen> {
                               );
                             },
                           ),
-                          customCard(
-                              text: 'Events',
-                              imagePath:
-                                  'assets/images/ic_date_sheet_home.png'),
+                          // customCard(
+                          //     text: 'Events',
+                          //     imagePath:
+                          //         'assets/images/ic_date_sheet_home.png'),
                           customCard(
                               text: 'Logout',
                               imagePath: 'assets/images/ic_logout_home.png',

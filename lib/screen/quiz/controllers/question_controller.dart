@@ -67,7 +67,9 @@ class QuestionController extends GetxController
     _correctAns = question.answer_index;
     _selectedAns = selectedIndex;
 
-    if (_correctAns == _selectedAns) _numOfCorrectAns++;
+    if (_correctAns == _selectedAns) {
+      _numOfCorrectAns++;
+    }
 
     _animationController.stop();
     update();
