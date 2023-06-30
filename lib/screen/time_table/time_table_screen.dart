@@ -1,7 +1,6 @@
 // ignore_for_file: depend_on_referenced_packages
 
 import 'dart:math';
-
 import 'package:app_chat/screen/time_table/dataBaseHelper.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -26,6 +25,7 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
   final TextEditingController _contentController = TextEditingController();
   final TextEditingController _timeController = TextEditingController();
   DateTime? selectedDate;
+  Set<DateTime> _selectedEventDates = {};
 
   @override
   void initState() {
@@ -36,6 +36,9 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
 
   @override
   Widget build(BuildContext context) {
+    List<DateTime> selectedDates = _selectedEventDates
+        .map((e) => DateTime(e.year, e.month, e.day))
+        .toList();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(40, 85, 174, 1),
@@ -76,6 +79,7 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                   color: Colors.blue,
                   shape: BoxShape.circle,
                 ),
+                weekendTextStyle: TextStyle(color: Colors.red),
               ),
               focusedDay: today,
               firstDay: DateTime.utc(2023, 1, 1),
@@ -86,6 +90,26 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                   selectedDate = selectedDay;
                 });
               },
+              calendarBuilders: CalendarBuilders(
+                defaultBuilder: (context, date, _) {
+                  if (selectedDates
+                      .contains(DateTime(date.year, date.month, date.day))) {
+                    return Container(
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.yellow,
+                      ),
+                      child: Center(
+                        child: Text(
+                          '${date.day}',
+                          style: const TextStyle(color: Colors.black),
+                        ),
+                      ),
+                    );
+                  }
+                  return null;
+                },
+              ),
             ),
           ),
           Container(
@@ -207,6 +231,7 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
     );
   }
 
+// delete event
   void _deleteCardItem(int id) async {
     int deletedRows = await databaseHelper.deleteData(id);
     if (deletedRows > 0) {
@@ -216,11 +241,13 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
     }
   }
 
+// clear text
   void _clearInputFields() {
     _titleController.clear();
     _contentController.clear();
   }
 
+// add event
   void _addCardItem() async {
     String time = DateFormat.Hm().format(today);
     String date = DateFormat.yMd().format(today);
@@ -253,13 +280,17 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
     }
   }
 
+// update status event
   void _updateStatus(int id, bool status) async {
     await databaseHelper.updateStatus(id, status);
     _loadCardItems();
   }
 
+// load events
   void _loadCardItems() async {
     List<Map<String, dynamic>>? data = await databaseHelper.getData();
+    List<DateTime> loadedHolidayDates =
+        data.map((row) => DateFormat('M/d/yyyy').parse(row['date'])).toList();
 
     setState(() {
       fakeCardItems = data
@@ -279,8 +310,11 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
               ))
           .toList();
     });
+    _selectedEventDates = Set.from(loadedHolidayDates);
+    print(_selectedEventDates);
   }
 
+// select time in add event
   Future<void> _selectTime() async {
     final TimeOfDay? selectedTime = await showTimePicker(
       context: context,
