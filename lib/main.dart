@@ -1,4 +1,5 @@
 // ignore_for_file: unused_field
+import 'package:app_chat/notifi_service/local_notifi_service.dart';
 import 'package:app_chat/screen/auth/login_screen.dart';
 import 'package:app_chat/screen/auth/splash_screen.dart';
 import 'package:app_chat/screen/home/home_screen.dart';
@@ -9,7 +10,8 @@ import 'package:flutter/foundation.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  NotificationService().initializeNotification();
+  NotificationService().showNotification(1, 'Hi Guys', 'I am obi');
   if (kIsWeb) {
     await Firebase.initializeApp(
         options: FirebaseOptions(

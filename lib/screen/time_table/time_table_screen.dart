@@ -26,7 +26,7 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
   final TextEditingController _timeController = TextEditingController();
   DateTime? selectedDate;
   Set<DateTime> _selectedEventDates = {};
-
+  List<DateTime> selectedDates = [];
   @override
   void initState() {
     super.initState();
@@ -36,9 +36,6 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
 
   @override
   Widget build(BuildContext context) {
-    List<DateTime> selectedDates = _selectedEventDates
-        .map((e) => DateTime(e.year, e.month, e.day))
-        .toList();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(40, 85, 174, 1),
@@ -95,6 +92,7 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                   if (selectedDates
                       .contains(DateTime(date.year, date.month, date.day))) {
                     return Container(
+                      width: 25,
                       decoration: const BoxDecoration(
                         shape: BoxShape.circle,
                         color: Colors.yellow,
@@ -237,6 +235,18 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
     if (deletedRows > 0) {
       setState(() {
         fakeCardItems.removeWhere((item) => item.id == id);
+
+        if (fakeCardItems.isEmpty) {
+          _selectedEventDates.clear();
+        } else {
+          String deletedItemDate = fakeCardItems.first.date;
+          _selectedEventDates.remove(deletedItemDate);
+        }
+
+        selectedDates = _selectedEventDates
+            .map((date) => DateTime(date.year, date.month, date.day))
+            .toList();
+        _loadCardItems();
       });
     }
   }
@@ -276,6 +286,11 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
           onDelete: _deleteCardItem,
           onUpdateStatus: _updateStatus,
         ));
+        DateTime newItemDate = DateFormat('M/d/yyyy').parse(date);
+        _selectedEventDates.add(newItemDate);
+        selectedDates = _selectedEventDates
+            .map((date) => DateTime(date.year, date.month, date.day))
+            .toList();
       });
     }
   }
@@ -309,9 +324,12 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                 },
               ))
           .toList();
+      _selectedEventDates = Set.from(loadedHolidayDates);
+      print(loadedHolidayDates);
+      selectedDates = _selectedEventDates
+          .map((date) => DateTime(date.year, date.month, date.day))
+          .toList();
     });
-    _selectedEventDates = Set.from(loadedHolidayDates);
-    print(_selectedEventDates);
   }
 
 // select time in add event
