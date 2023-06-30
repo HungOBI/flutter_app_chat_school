@@ -1,6 +1,6 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
-import 'package:app_chat/screen/quiz/controllers/question_controller.dart';
+import 'package:app_chat/controllers/question_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

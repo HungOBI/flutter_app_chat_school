@@ -14,7 +14,7 @@ import 'package:flutter/material.dart';
 import '../quiz/score_screen.dart';
 import '../time_table/time_table_screen.dart';
 import 'custom_home/custom_card_homescreen.dart';
-import 'helper/helper_foundation.dart';
+import '../../helper/helper_foundation.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);

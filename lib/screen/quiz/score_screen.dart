@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../home/home_screen.dart';
-import 'controllers/question_controller.dart';
+import '../../controllers/question_controller.dart';
 
 class ScoreScreen extends StatefulWidget {
   const ScoreScreen({super.key});

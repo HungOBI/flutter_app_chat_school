@@ -2,7 +2,7 @@
 import 'package:app_chat/screen/auth/login_screen.dart';
 import 'package:app_chat/screen/auth/splash_screen.dart';
 import 'package:app_chat/screen/home/home_screen.dart';
-import 'package:app_chat/screen/auth/shared/constants.dart';
+import 'package:app_chat/shared/constants.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';

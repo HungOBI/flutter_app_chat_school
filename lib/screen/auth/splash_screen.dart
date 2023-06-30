@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../home/helper/helper_foundation.dart';
+import '../../helper/helper_foundation.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

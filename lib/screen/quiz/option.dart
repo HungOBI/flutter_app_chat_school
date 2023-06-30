@@ -1,4 +1,4 @@
-import 'package:app_chat/screen/quiz/controllers/question_controller.dart';
+import 'package:app_chat/controllers/question_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
