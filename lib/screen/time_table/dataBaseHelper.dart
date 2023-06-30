@@ -1,6 +1,5 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:uuid/uuid.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper.internal();
@@ -37,7 +36,7 @@ class DatabaseHelper {
         date TEXT,
         title TEXT,
         content TEXT,
-        status TEXT
+        status BOOL,
       )
     ''');
   }
@@ -53,12 +52,22 @@ class DatabaseHelper {
     return await db!.query('your_table');
   }
 
-  Future<int> updateData(Map<String, dynamic> row) async {
+  // Future<int> updateData(Map<String, dynamic> row) async {
+  //   Database? db = await database;
+  //   int id = row['id'];
+  //   return await db!.update(
+  //     'your_table',
+  //     row,
+  //     where: 'id = ?',
+  //     whereArgs: [id],
+  //   );
+  // }
+
+  Future<int> updateStatus(int id, bool status) async {
     Database? db = await database;
-    int id = row['id'];
     return await db!.update(
       'your_table',
-      row,
+      {'status': status},
       where: 'id = ?',
       whereArgs: [id],
     );
@@ -71,5 +80,12 @@ class DatabaseHelper {
       where: 'id = ?',
       whereArgs: [id],
     );
+  }
+
+  Future<List> getAllDates() async {
+    Database? db = await database;
+    List<Map<String, dynamic>> rows = await db!.query('your_table');
+    List dates = rows.map((row) => row['date']).toList();
+    return dates;
   }
 }

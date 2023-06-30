@@ -1,5 +1,3 @@
-// ignore_for_file: library_private_types_in_public_api
-
 import 'package:flutter/material.dart';
 
 class CardItem extends StatefulWidget {
@@ -8,8 +6,10 @@ class CardItem extends StatefulWidget {
   final String date;
   final String title;
   final String content;
-  final String status;
+  final bool status;
   final Function(int) onDelete;
+  final Function(int, bool) onUpdateStatus;
+
   const CardItem({
     Key? key,
     required this.time,
@@ -19,6 +19,7 @@ class CardItem extends StatefulWidget {
     required this.content,
     required this.status,
     required this.onDelete,
+    required this.onUpdateStatus,
   }) : super(key: key);
 
   @override
@@ -27,6 +28,12 @@ class CardItem extends StatefulWidget {
 
 class _CardItemState extends State<CardItem> {
   bool isChecked = false;
+
+  @override
+  void initState() {
+    isChecked = widget.status;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,29 +46,27 @@ class _CardItemState extends State<CardItem> {
               widget.time,
               style: const TextStyle(fontSize: 12),
             ),
-            const SizedBox(
-              width: 10,
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 8.0),
+                  Text(
+                    widget.title,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8.0),
+                  Text(widget.content),
+                ],
+              ),
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 8.0),
-                Text(
-                  widget.title,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 8.0),
-                Text(widget.content),
-              ],
-            ),
-            const Spacer(),
-            IconButton(
-              icon: isChecked
-                  ? const Icon(Icons.check_box)
-                  : const Icon(Icons.check_box_outline_blank),
-              onPressed: () {
+            Checkbox(
+              value: isChecked,
+              onChanged: (value) {
                 setState(() {
-                  isChecked = !isChecked;
+                  isChecked = value!;
+                  widget.onUpdateStatus(widget.id, isChecked);
                 });
               },
             ),

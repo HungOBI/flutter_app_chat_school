@@ -1,9 +1,10 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'dart:math';
 
-import 'package:app_chat/screen/time/dataBaseHelper.dart';
+import 'package:app_chat/screen/time_table/dataBaseHelper.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
-// ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
 
 import 'card_item.dart';
@@ -17,35 +18,20 @@ class TimeTableScreen extends StatefulWidget {
 
 class _TimeTableScreenState extends State<TimeTableScreen> {
   DateTime today = DateTime.now();
+  DateTime selectedDay = DateTime.now();
   List<CardItem> fakeCardItems = [];
   late DatabaseHelper databaseHelper;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _contentController = TextEditingController();
   final TextEditingController _timeController = TextEditingController();
+  DateTime? selectedDate;
 
   @override
   void initState() {
     super.initState();
     databaseHelper = DatabaseHelper();
     _loadCardItems();
-  }
-
-  void _loadCardItems() async {
-    List<Map<String, dynamic>> data = await databaseHelper.getData();
-    setState(() {
-      fakeCardItems = data
-          .map((row) => CardItem(
-                time: row['time'],
-                date: row['date'],
-                title: row['title'],
-                content: row['content'],
-                status: row['status'],
-                id: row['id'],
-                onDelete: (int) {},
-              ))
-          .toList();
-    });
   }
 
   @override
@@ -77,25 +63,29 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
             ),
             child: TableCalendar(
               locale: "en_US",
-              rowHeight: 45,
+              rowHeight: 40,
               headerStyle: const HeaderStyle(
                 formatButtonVisible: false,
                 titleCentered: true,
               ),
               availableGestures: AvailableGestures.all,
-              selectedDayPredicate: (day) => isSameDay(day, today),
+              selectedDayPredicate: (day) => isSameDay(day, selectedDay),
               calendarStyle: const CalendarStyle(
                 selectedTextStyle: TextStyle(color: Colors.white),
                 todayDecoration: BoxDecoration(
                   color: Colors.blue,
                   shape: BoxShape.circle,
                 ),
-                weekendTextStyle: TextStyle(color: Colors.red),
               ),
               focusedDay: today,
               firstDay: DateTime.utc(2023, 1, 1),
               lastDay: DateTime.utc(2033, 1, 1),
-              onDaySelected: _onDaySelected,
+              onDaySelected: (selectedDay, focusedDay) {
+                setState(() {
+                  this.selectedDay = selectedDay;
+                  selectedDate = selectedDay;
+                });
+              },
             ),
           ),
           Container(
@@ -116,26 +106,7 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.white,
                             ),
-                            onPressed: () async {
-                              final TimeOfDay? selectedTime =
-                                  await showTimePicker(
-                                context: context,
-                                initialTime: TimeOfDay.now(),
-                              );
-                              if (selectedTime != null) {
-                                setState(() {
-                                  today = DateTime(
-                                    today.year,
-                                    today.month,
-                                    today.day,
-                                    selectedTime.hour,
-                                    selectedTime.minute,
-                                  );
-                                });
-                                _timeController.text =
-                                    DateFormat.Hm().format(today);
-                              }
-                            },
+                            onPressed: (_selectTime),
                             child: Text(
                               _timeController.text.isEmpty
                                   ? '00 : 00'
@@ -207,15 +178,21 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                 itemCount: fakeCardItems.length,
                 itemBuilder: (context, index) {
                   final cardItem = fakeCardItems[index];
-                  return CardItem(
-                    time: cardItem.time,
-                    date: cardItem.date,
-                    title: cardItem.title,
-                    content: cardItem.content,
-                    status: cardItem.status,
-                    id: cardItem.id,
-                    onDelete: _deleteCardItem,
-                  );
+                  if (selectedDate != null &&
+                      cardItem.date == DateFormat.yMd().format(selectedDate!)) {
+                    return CardItem(
+                      time: cardItem.time,
+                      date: cardItem.date,
+                      title: cardItem.title,
+                      content: cardItem.content,
+                      status: cardItem.status,
+                      id: cardItem.id,
+                      onDelete: _deleteCardItem,
+                      onUpdateStatus: _updateStatus,
+                    );
+                  } else {
+                    return const SizedBox.shrink();
+                  }
                 },
               ),
             ),
@@ -234,12 +211,6 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
     }
   }
 
-  void _onDaySelected(DateTime day, DateTime focusedDay) {
-    setState(() {
-      today = day;
-    });
-  }
-
   void _clearInputFields() {
     _titleController.clear();
     _contentController.clear();
@@ -256,21 +227,70 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
       'date': date,
       'title': title,
       'content': content,
-      'status': 'Pending',
+      'status': false,
     };
-    int id = Random().nextInt(10000);
+
+    int id = Random().nextInt(100000);
     int insertedId = await databaseHelper.insertData(row, id);
-    if (id != 0) {
+    if (id != -1) {
       setState(() {
         fakeCardItems.add(CardItem(
           time: time,
           date: date,
           title: title,
           content: content,
-          status: 'Pending',
+          status: false,
           id: insertedId,
-          onDelete: (int) {},
+          onDelete: _deleteCardItem,
+          onUpdateStatus: _updateStatus,
         ));
+      });
+    }
+  }
+
+  void _updateStatus(int id, bool status) async {
+    await databaseHelper.updateStatus(id, status);
+    _loadCardItems();
+  }
+
+  void _loadCardItems() async {
+    List<Map<String, dynamic>>? data = await databaseHelper.getData();
+
+    setState(() {
+      fakeCardItems = data
+          .map((row) => CardItem(
+                time: row['time'],
+                date: row['date'],
+                title: row['title'],
+                content: row['content'],
+                status: row['status'].toLowerCase() == 'true',
+                id: row['id'],
+                onDelete: (int id) {
+                  _deleteCardItem(id);
+                },
+                onUpdateStatus: (id, status) {
+                  _updateStatus(id, status);
+                },
+              ))
+          .toList();
+    });
+  }
+
+  Future<void> _selectTime() async {
+    final TimeOfDay? selectedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+    if (selectedTime != null) {
+      setState(() {
+        today = DateTime(
+          selectedDay.year,
+          selectedDay.month,
+          selectedDay.day,
+          selectedTime.hour,
+          selectedTime.minute,
+        );
+        _timeController.text = DateFormat.Hm().format(today);
       });
     }
   }

@@ -12,7 +12,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../quiz/score_screen.dart';
-import '../time/time_table_screen.dart';
+import '../time_table/time_table_screen.dart';
 import 'custom_home/custom_card_homescreen.dart';
 import 'helper/helper_foundation.dart';
 
