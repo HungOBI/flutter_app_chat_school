@@ -102,19 +102,24 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                            ),
-                            onPressed: (_selectTime),
-                            child: Text(
-                              _timeController.text.isEmpty
-                                  ? '00 : 00'
-                                  : _timeController.text,
-                              style: const TextStyle(
-                                  fontSize: 30,
-                                  color: Color.fromARGB(255, 0, 0, 0)),
-                            ),
+                          ValueListenableBuilder<TextEditingValue>(
+                            valueListenable: _timeController,
+                            builder: (BuildContext context,
+                                TextEditingValue value, Widget? child) {
+                              return ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.white,
+                                ),
+                                onPressed: _selectTime,
+                                child: Text(
+                                  value.text.isEmpty ? '00 : 00' : value.text,
+                                  style: const TextStyle(
+                                    fontSize: 30,
+                                    color: Color.fromARGB(255, 0, 0, 0),
+                                  ),
+                                ),
+                              );
+                            },
                           ),
                           TextFormField(
                             controller: _titleController,
