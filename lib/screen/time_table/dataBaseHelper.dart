@@ -1,5 +1,6 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:intl/intl.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper.internal();
@@ -52,17 +53,7 @@ class DatabaseHelper {
     return await db!.query('your_table');
   }
 
-  // Future<int> updateData(Map<String, dynamic> row) async {
-  //   Database? db = await database;
-  //   int id = row['id'];
-  //   return await db!.update(
-  //     'your_table',
-  //     row,
-  //     where: 'id = ?',
-  //     whereArgs: [id],
-  //   );
-  // }
-
+// change status in file  database
   Future<int> updateStatus(int id, bool status) async {
     Database? db = await database;
     return await db!.update(
@@ -73,6 +64,7 @@ class DatabaseHelper {
     );
   }
 
+// delete data in file database
   Future<int> deleteData(int id) async {
     Database? db = await database;
     return await db!.delete(
@@ -82,10 +74,31 @@ class DatabaseHelper {
     );
   }
 
+// get all date for event
   Future<List> getAllDates() async {
     Database? db = await database;
     List<Map<String, dynamic>> rows = await db!.query('your_table');
     List dates = rows.map((row) => row['date']).toList();
     return dates;
+  }
+
+// get all date and time use in notifi
+  Future<List<DateTime>> getAllDateTime() async {
+    Database? db = await database;
+    List<Map<String, dynamic>> rows = await db!.query('your_table');
+
+    List<DateTime> dateTimes = [];
+
+    for (Map<String, dynamic> row in rows) {
+      String dateString = row['date'];
+      String timeString = row['time'];
+
+      DateFormat dateFormat = DateFormat('M/d/yyyy H:mm');
+      DateTime dateTime = dateFormat.parse('$dateString $timeString');
+
+      dateTimes.add(dateTime);
+    }
+
+    return dateTimes;
   }
 }

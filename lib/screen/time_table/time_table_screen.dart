@@ -27,6 +27,7 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
   DateTime? selectedDate;
   Set<DateTime> _selectedEventDates = {};
   List<DateTime> selectedDates = [];
+
   @override
   void initState() {
     super.initState();
@@ -304,8 +305,9 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
 // load events
   void _loadCardItems() async {
     List<Map<String, dynamic>>? data = await databaseHelper.getData();
-    List<DateTime> loadedHolidayDates =
-        data.map((row) => DateFormat('M/d/yyyy').parse(row['date'])).toList();
+    List<DateTime> loadedHolidayDates = data
+        .map((row) => DateFormat('M/d/yyyy').parse(row['date']))
+        .toList(); // laays ngayf bij trungf
 
     setState(() {
       fakeCardItems = data
@@ -324,12 +326,13 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                 },
               ))
           .toList();
-      _selectedEventDates = Set.from(loadedHolidayDates);
-      print(loadedHolidayDates);
+      _selectedEventDates = Set.from(loadedHolidayDates); // laays ngayf 1 lanf
       selectedDates = _selectedEventDates
           .map((date) => DateTime(date.year, date.month, date.day))
           .toList();
     });
+    List<DateTime> timetable = await DatabaseHelper().getAllDateTime();
+    print('timetable: $timetable');
   }
 
 // select time in add event

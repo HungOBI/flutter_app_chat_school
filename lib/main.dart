@@ -11,7 +11,10 @@ import 'package:flutter/foundation.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   NotificationService().initializeNotification();
-  NotificationService().showNotification(1, 'Hi Guys', 'I am obi');
+  await NotificationService().showMatchingNotifications();
+
+  // NotificationService().showNotification(1, 'Hi Guys', 'I am obi');
+
   if (kIsWeb) {
     await Firebase.initializeApp(
         options: FirebaseOptions(
