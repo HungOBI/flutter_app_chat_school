@@ -1,22 +1,20 @@
-// ignore_for_file: no_leading_underscores_for_local_identifiers
-
-import 'package:app_chat/controllers/question_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-
+import 'package:provider/provider.dart';
+import '../../controllers/question_controller.dart';
 import '../../data_fake/question.dart';
 import 'option.dart';
 
 class QuestionCard extends StatelessWidget {
   const QuestionCard({
-    super.key,
+    Key? key,
     required this.question,
-  });
+  }) : super(key: key);
+
   final Question question;
 
   @override
   Widget build(BuildContext context) {
-    QuestionController _controller = Get.put(QuestionController());
+    final questionController = context.read(questionControllerProvider);
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
       padding: const EdgeInsets.all(15),
@@ -39,7 +37,9 @@ class QuestionCard extends StatelessWidget {
             (index) => Option(
               index: index,
               text: question.options[index],
-              press: () => _controller.checkAns(question, index),
+              press: () {
+                questionController.checkAns(question, index);
+              },
             ),
           ),
         ],

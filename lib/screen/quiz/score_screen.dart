@@ -1,21 +1,13 @@
-// ignore_for_file: no_leading_underscores_for_local_identifiers, use_key_in_widget_constructors
-
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import '../home/home_screen.dart';
 import '../../controllers/question_controller.dart';
 
-class ScoreScreen extends StatefulWidget {
-  const ScoreScreen({super.key});
+class ScoreScreen extends StatelessWidget {
+  const ScoreScreen({Key? key}) : super(key: key);
 
-  @override
-  State<ScoreScreen> createState() => _ScoreScreenState();
-}
-
-class _ScoreScreenState extends State<ScoreScreen> {
   @override
   Widget build(BuildContext context) {
-    QuestionController _qnController = Get.put(QuestionController());
+    final questionController = QuestionController();
     return Scaffold(
       body: Stack(
         fit: StackFit.expand,
@@ -34,7 +26,7 @@ class _ScoreScreenState extends State<ScoreScreen> {
                 height: 10,
               ),
               Text(
-                "${_qnController.numOfCorrectAns * 10}/${_qnController.questions.length * 10}",
+                "${questionController.numOfCorrectAns * 10}/${questionController.questions.length * 10}",
                 style: const TextStyle(
                   fontSize: 30,
                   color: Color.fromRGBO(255, 255, 255, 1),
@@ -42,21 +34,22 @@ class _ScoreScreenState extends State<ScoreScreen> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  Get.offAllNamed('/');
-                  // var i = 0;
-                  // Navigator.of(context).popUntil((pre) {
-                  //   i++;
-                  //   return i > 1;
-                  // });
+                  questionController.resetQuiz();
                 },
                 child: const Text('Answer Again'),
               ),
               const Spacer(),
               ElevatedButton(
-                  onPressed: () {
-                    Get.offAll(const HomeScreen());
-                  },
-                  child: const Text('Out Home Screen')),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const HomeScreen(),
+                    ),
+                  );
+                },
+                child: const Text('Go to Home Screen'),
+              ),
               const Spacer(),
             ],
           )
