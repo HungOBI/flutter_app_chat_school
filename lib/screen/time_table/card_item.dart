@@ -1,3 +1,6 @@
+// ignore_for_file: unused_import
+
+import 'package:app_chat/screen/time_table/dataBaseHelper.dart';
 import 'package:flutter/material.dart';
 
 class CardItem extends StatefulWidget {
@@ -10,7 +13,7 @@ class CardItem extends StatefulWidget {
   final Function(int) onDelete;
   final Function(int, bool) onUpdateStatus;
 
-  const CardItem({
+  CardItem({
     Key? key,
     required this.time,
     required this.id,
@@ -66,7 +69,7 @@ class _CardItemState extends State<CardItem> {
               value: isChecked,
               onChanged: (value) {
                 setState(() {
-                  isChecked = value!;
+                  isChecked = value ?? false;
                   widget.onUpdateStatus(widget.id, isChecked);
                 });
               },

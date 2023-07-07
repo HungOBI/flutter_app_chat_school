@@ -37,7 +37,7 @@ class DatabaseHelper {
         date TEXT,
         title TEXT,
         content TEXT,
-        status BOOL,
+        status BIT,
       )
     ''');
   }
@@ -56,9 +56,10 @@ class DatabaseHelper {
 // change status in file  database
   Future<int> updateStatus(int id, bool status) async {
     Database? db = await database;
+    int statusValue = status ? 1 : 0;
     return await db!.update(
       'your_table',
-      {'status': status},
+      {'status': statusValue},
       where: 'id = ?',
       whereArgs: [id],
     );
@@ -86,16 +87,13 @@ class DatabaseHelper {
   Future<List<DateTime>> getAllDateTime() async {
     Database? db = await database;
     List<Map<String, dynamic>> rows = await db!.query('your_table');
-
     List<DateTime> dateTimes = [];
 
     for (Map<String, dynamic> row in rows) {
       String dateString = row['date'];
       String timeString = row['time'];
-
       DateFormat dateFormat = DateFormat('M/d/yyyy H:mm');
       DateTime dateTime = dateFormat.parse('$dateString $timeString');
-
       dateTimes.add(dateTime);
     }
 

@@ -298,34 +298,38 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
 
 // update status event
   void _updateStatus(int id, bool status) async {
-    await databaseHelper.updateStatus(id, status);
-    _loadCardItems();
+    try {
+      await databaseHelper.updateStatus(id, status);
+      _loadCardItems();
+    } catch (e) {
+      print(e);
+    }
   }
 
 // load events
   void _loadCardItems() async {
     List<Map<String, dynamic>>? data = await databaseHelper.getData();
-    List<DateTime> loadedHolidayDates = data
-        .map((row) => DateFormat('M/d/yyyy').parse(row['date']))
-        .toList(); // laays ngayf bij trungf
+    List<DateTime> loadedHolidayDates =
+        data.map((row) => DateFormat('M/d/yyyy').parse(row['date'])).toList();
 
     setState(() {
-      fakeCardItems = data
-          .map((row) => CardItem(
-                time: row['time'],
-                date: row['date'],
-                title: row['title'],
-                content: row['content'],
-                status: row['status'].toLowerCase() == 'true',
-                id: row['id'],
-                onDelete: (int id) {
-                  _deleteCardItem(id);
-                },
-                onUpdateStatus: (id, status) {
-                  _updateStatus(id, status);
-                },
-              ))
-          .toList();
+      fakeCardItems = data.map((row) {
+        print('ddataa ${row['status']}  ${row['5']}');
+        return CardItem(
+          time: row['time'],
+          date: row['date'],
+          title: row['title'],
+          content: row['content'],
+          status: int.parse(row['status']) == 1,
+          id: row['id'],
+          onDelete: (int id) {
+            _deleteCardItem(id);
+          },
+          onUpdateStatus: (id, status) {
+            _updateStatus(id, status);
+          },
+        );
+      }).toList();
       _selectedEventDates = Set.from(loadedHolidayDates); // laays ngayf 1 lanf
       selectedDates = _selectedEventDates
           .map((date) => DateTime(date.year, date.month, date.day))
