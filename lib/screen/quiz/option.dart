@@ -16,10 +16,8 @@ class Option extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer(
-      builder: (context, watch, _) {
-        final questionController = watch(questionControllerProvider);
-
+    return Consumer<QuestionController>(
+      builder: (context, questionController, _) {
         Color getTheRightColor() {
           if (questionController.isAnswered) {
             if (index == questionController.correctAns) {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../controllers/question_controller.dart';
-import '../../data_fake/question.dart';
+import '../../controllers/quiz_model.dart';
 import 'option.dart';
 
 class QuestionCard extends StatelessWidget {
@@ -10,11 +10,11 @@ class QuestionCard extends StatelessWidget {
     required this.question,
   }) : super(key: key);
 
-  final Question question;
+  final QuizModel question;
 
   @override
   Widget build(BuildContext context) {
-    final questionController = context.read(questionControllerProvider);
+    final questionController = Provider.of<QuestionController>(context);
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
       padding: const EdgeInsets.all(15),
@@ -35,8 +35,8 @@ class QuestionCard extends StatelessWidget {
           ...List.generate(
             question.options.length,
             (index) => Option(
-              index: index,
               text: question.options[index],
+              index: index,
               press: () {
                 questionController.checkAns(question, index);
               },

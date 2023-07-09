@@ -1,7 +1,8 @@
+import 'package:app_chat/controllers/quiz_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../data_fake/question.dart';
-import '../screen/quiz/score_screen.dart';
+import 'package:dio/dio.dart';
+import 'quiz_model.dart';
 
 final questionControllerProvider = ChangeNotifierProvider<QuestionController>(
   create: (ref) => QuestionController(),
@@ -12,21 +13,12 @@ class QuestionController extends ChangeNotifier {
   late Animation<double> _animation;
   Animation<double> get animation => _animation;
 
-  final List<Question> _questions = sample_data
-      .map(
-        (question) => Question(
-          id: question['id'] as int,
-          question: question['question'] as String,
-          options: List<String>.from((question['options'] as List<dynamic>)
-              .map((option) => option.toString())),
-          answerIndex: question['answer_index'] as int,
-        ),
-      )
-      .toList();
   late PageController _pageController;
   PageController get pageController => _pageController;
 
-  List<Question> get questions => _questions;
+  List<QuizModel> _questions = [];
+  List<QuizModel> get questions => _questions;
+
   bool _isAnswered = false;
   bool get isAnswered => _isAnswered;
 
@@ -49,6 +41,20 @@ class QuestionController extends ChangeNotifier {
     super.dispose();
   }
 
+  Future<void> fetchQuestions() async {
+    try {
+      final dio = Dio();
+      final quizService = QuizService(dio);
+      final response = await quizService.getQuizData();
+      _questions = response
+          .map((json) => QuizModel.fromJson(json as Map<String, dynamic>))
+          .toList();
+      notifyListeners();
+    } catch (error) {
+      // Handle error
+    }
+  }
+
   void resetQuiz() {
     _questionNumber = 1;
     _numOfCorrectAns = 0;
@@ -68,7 +74,11 @@ class QuestionController extends ChangeNotifier {
       _animationController.reset();
       _animationController.forward().whenComplete(nextQuestion);
     } else {
-      //chuyen man
+      // Go to score screen
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(builder: (context) => ScoreScreen()),
+      // );
     }
     notifyListeners();
   }
@@ -78,7 +88,7 @@ class QuestionController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void checkAns(Question question, int selectedIndex) {
+  void checkAns(QuizModel question, int selectedIndex) {
     _isAnswered = true;
     _correctAns = question.answerIndex;
     _selectedAns = selectedIndex;
