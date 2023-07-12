@@ -3,8 +3,24 @@ import 'package:provider/provider.dart';
 
 import '../../controllers/question_controller.dart';
 
-class ProgressBar extends StatelessWidget {
-  const ProgressBar({Key? key}) : super(key: key);
+class ProgressBar extends StatefulWidget {
+  ProgressBar({Key? key}) : super(key: key);
+
+  @override
+  _ProgressBarState createState() => _ProgressBarState();
+}
+
+class _ProgressBarState extends State<ProgressBar>
+    with TickerProviderStateMixin {
+  late AnimationController ctrlDemo;
+  @override
+  void initState() {
+    super.initState();
+    ctrlDemo = AnimationController(
+      duration: Duration(seconds: 10),
+      vsync: this,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,8 +37,8 @@ class ProgressBar extends StatelessWidget {
             children: [
               LayoutBuilder(
                 builder: (context, constraints) => Container(
-                  width:
-                      constraints.maxWidth * questionController.animation.value,
+                  // width:
+                  //     constraints.maxWidth * questionController.animation.value,
                   decoration: BoxDecoration(
                     gradient: const LinearGradient(
                       colors: [
@@ -42,8 +58,8 @@ class ProgressBar extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                          "${(questionController.animation.value * 10).round()} sec"),
+                      // Text(
+                      //     "${(questionController.animation.value * 10).round()} sec"),
                       const Icon(Icons.lock_clock),
                     ],
                   ),

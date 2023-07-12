@@ -5,7 +5,7 @@ import '../../controllers/quiz_model.dart';
 import 'option.dart';
 
 class QuestionCard extends StatelessWidget {
-  const QuestionCard({
+  QuestionCard({
     Key? key,
     required this.question,
   }) : super(key: key);
@@ -38,7 +38,7 @@ class QuestionCard extends StatelessWidget {
               text: question.options[index],
               index: index,
               press: () {
-                questionController.checkAns(question, index);
+                // questionController.checkAns(question, index);
               },
             ),
           ),

@@ -55,6 +55,7 @@ dependencies:
   json_annotation: ^4.8.1
   retrofit_generator: ^7.0.8
   hooks_riverpod: ^2.3.6
+  flutter_timer_countdown: ^1.0.5
 
 dev_dependencies:
   flutter_test:

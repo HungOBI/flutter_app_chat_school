@@ -9,12 +9,12 @@ final questionControllerProvider = ChangeNotifierProvider<QuestionController>(
 );
 
 class QuestionController extends ChangeNotifier {
-  late AnimationController _animationController;
-  late Animation<double> _animation;
-  Animation<double> get animation => _animation;
+  // late AnimationController _animationController;
+  // late Animation<double> _animation;
+  // Animation<double> get animation => _animation;
 
-  late PageController _pageController;
-  PageController get pageController => _pageController;
+  PageController? _pageController;
+  PageController? get pageController => _pageController;
 
   List<QuizModel> _questions = [];
   List<QuizModel> get questions => _questions;
@@ -36,9 +36,24 @@ class QuestionController extends ChangeNotifier {
 
   @override
   void dispose() {
-    _animationController.dispose();
-    _pageController.dispose();
+    // _animationController.dispose();
+    _pageController?.dispose();
     super.dispose();
+  }
+
+  @override
+  void OnInit() {
+    // _animationController = AnimationController(
+    //   duration: const Duration(seconds: 10),
+    //   vsync: this,
+    // );
+    // _animation = Tween<double>(begin: 0, end: 1).animate(_animationController)
+    //   ..addListener(() {
+    //     notifyListeners();
+    //   });
+
+    // _animationController.forward().whenComplete(nextQuestion);
+    _pageController = PageController();
   }
 
   Future<void> fetchQuestions() async {
@@ -58,21 +73,16 @@ class QuestionController extends ChangeNotifier {
   void resetQuiz() {
     _questionNumber = 1;
     _numOfCorrectAns = 0;
-    _pageController.jumpToPage(0);
-    _animationController.reset();
-    _animationController.forward().whenComplete(nextQuestion);
+    // _animationController.reset();
+    // _animationController.forward().whenComplete(nextQuestion);
     notifyListeners();
   }
 
   void nextQuestion() {
     if (_questionNumber != _questions.length) {
       _isAnswered = false;
-      _pageController.nextPage(
-        duration: Duration(milliseconds: 250),
-        curve: Curves.ease,
-      );
-      _animationController.reset();
-      _animationController.forward().whenComplete(nextQuestion);
+      // _animationController.reset();
+      // _animationController.forward().whenComplete(nextQuestion);
     } else {
       // Go to score screen
       // Navigator.push(
@@ -95,9 +105,9 @@ class QuestionController extends ChangeNotifier {
     if (_correctAns == _selectedAns) {
       _numOfCorrectAns++;
     }
-    _animationController.stop();
+    // _animationController.stop();
     notifyListeners();
-    Future.delayed(Duration(seconds: 1), () {
+    Future.delayed(const Duration(seconds: 1), () {
       nextQuestion();
     });
   }

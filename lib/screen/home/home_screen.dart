@@ -11,7 +11,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
 
-import '../quiz/score_screen.dart';
 import '../time_table/time_table_screen.dart';
 import 'custom_home/custom_card_homescreen.dart';
 import '../../helper/helper_foundation.dart';
@@ -149,21 +148,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             text: 'Play Quiz',
                             imagePath: 'assets/images/ic_quiz_home.png',
                             onTap: () {
-                              i++;
-                              if (i <= 1) {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const QuizScreen()),
-                                );
-                              } else {
-                                Navigator.pushReplacement(
+                              Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          const ScoreScreen()),
-                                );
-                              }
+                                          const QuizScreen()));
                             },
                           ),
                           customCard(
