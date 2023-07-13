@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../controllers/question_controller.dart';
-import '../../controllers/quiz_model.dart';
+import '../../quiz_service/quiz_model.dart';
 import 'option.dart';
 
 class QuestionCard extends StatelessWidget {
@@ -25,7 +25,7 @@ class QuestionCard extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            question.question,
+            question.question!,
             style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
@@ -33,12 +33,12 @@ class QuestionCard extends StatelessWidget {
             ),
           ),
           ...List.generate(
-            question.options.length,
+            question.option!.length,
             (index) => Option(
-              text: question.options[index],
+              text: question.option![index],
               index: index,
               press: () {
-                // questionController.checkAns(question, index);
+                questionController.checkAns(question, index);
               },
             ),
           ),

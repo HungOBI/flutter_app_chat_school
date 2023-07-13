@@ -4,22 +4,39 @@ import 'package:provider/provider.dart';
 import '../../controllers/question_controller.dart';
 
 class ProgressBar extends StatefulWidget {
-  ProgressBar({Key? key}) : super(key: key);
+  const ProgressBar({Key? key}) : super(key: key);
 
   @override
   _ProgressBarState createState() => _ProgressBarState();
 }
 
 class _ProgressBarState extends State<ProgressBar>
-    with TickerProviderStateMixin {
-  late AnimationController ctrlDemo;
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _animation;
+
   @override
   void initState() {
     super.initState();
-    ctrlDemo = AnimationController(
-      duration: Duration(seconds: 10),
-      vsync: this,
-    );
+    _animationController =
+        AnimationController(duration: Duration(seconds: 10), vsync: this);
+    _animation =
+        Tween<double>(begin: 1.0, end: 0.0).animate(_animationController)
+          ..addListener(() {
+            setState(() {});
+          });
+    _animationController.reverse(from: 1.0);
+  }
+
+  @override
+  void didUpdateWidget(ProgressBar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 
   @override
@@ -37,8 +54,7 @@ class _ProgressBarState extends State<ProgressBar>
             children: [
               LayoutBuilder(
                 builder: (context, constraints) => Container(
-                  // width:
-                  //     constraints.maxWidth * questionController.animation.value,
+                  width: constraints.maxWidth * _animation.value,
                   decoration: BoxDecoration(
                     gradient: const LinearGradient(
                       colors: [
@@ -58,8 +74,7 @@ class _ProgressBarState extends State<ProgressBar>
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      // Text(
-                      //     "${(questionController.animation.value * 10).round()} sec"),
+                      Text("${(_animation.value * 10).round()} sec"),
                       const Icon(Icons.lock_clock),
                     ],
                   ),

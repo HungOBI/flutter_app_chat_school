@@ -1,18 +1,14 @@
-import 'package:app_chat/controllers/quiz_service.dart';
+import 'package:app_chat/quiz_service/quiz_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:dio/dio.dart';
-import 'quiz_model.dart';
+import '../quiz_service/quiz_model.dart';
 
-final questionControllerProvider = ChangeNotifierProvider<QuestionController>(
+final questionControllerProvider = ChangeNotifierProvider(
   create: (ref) => QuestionController(),
 );
 
 class QuestionController extends ChangeNotifier {
-  // late AnimationController _animationController;
-  // late Animation<double> _animation;
-  // Animation<double> get animation => _animation;
-
   PageController? _pageController;
   PageController? get pageController => _pageController;
 
@@ -78,20 +74,20 @@ class QuestionController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void nextQuestion() {
-    if (_questionNumber != _questions.length) {
-      _isAnswered = false;
-      // _animationController.reset();
-      // _animationController.forward().whenComplete(nextQuestion);
-    } else {
-      // Go to score screen
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => ScoreScreen()),
-      // );
-    }
-    notifyListeners();
-  }
+  // void nextQuestion() {
+  //   if (_questionNumber != _questions.length) {
+  //     _isAnswered = false;
+  // _animationController.reset();
+  // _animationController.forward().whenComplete(nextQuestion);
+  //   } else {
+  // Go to score screen
+  // Navigator.push(
+  //   context,
+  //   MaterialPageRoute(builder: (context) => ScoreScreen()),
+  // );
+  //   }
+  //   notifyListeners();
+  // }
 
   void updateTheQnNum(int index) {
     _questionNumber = index + 1;
@@ -100,7 +96,7 @@ class QuestionController extends ChangeNotifier {
 
   void checkAns(QuizModel question, int selectedIndex) {
     _isAnswered = true;
-    _correctAns = question.answerIndex;
+    _correctAns = question.answerIndex!;
     _selectedAns = selectedIndex;
     if (_correctAns == _selectedAns) {
       _numOfCorrectAns++;
@@ -108,7 +104,7 @@ class QuestionController extends ChangeNotifier {
     // _animationController.stop();
     notifyListeners();
     Future.delayed(const Duration(seconds: 1), () {
-      nextQuestion();
+      // nextQuestion();
     });
   }
 }

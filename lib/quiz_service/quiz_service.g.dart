@@ -13,7 +13,7 @@ class _QuizService implements QuizService {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl = 'https://64a7b26edca581464b849977.mockapi.io/api/quiz/question';
+    baseUrl ??= 'https://64a7b26edca581464b849977.mockapi.io/api/quiz/';
   }
 
   final Dio _dio;
@@ -34,7 +34,7 @@ class _QuizService implements QuizService {
     )
             .compose(
               _dio.options,
-              '/quiz',
+              '/question',
               queryParameters: queryParameters,
               data: _data,
             )

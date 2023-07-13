@@ -1,9 +1,9 @@
-import 'package:app_chat/controllers/quiz_model.dart';
+import 'package:app_chat/quiz_service/quiz_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../controllers/question_controller.dart';
-import '../../controllers/quiz_service.dart';
+import '../../quiz_service/quiz_service.dart';
 import 'progress_bar.dart';
 import 'question_card.dart';
 
@@ -16,7 +16,7 @@ class QuizScreen extends StatefulWidget {
 
 class _QuizScreenState extends State<QuizScreen> {
   @override
-  Future<void> initState() async {
+  void initState() {
     super.initState();
     final questionController = context.read<QuestionController>();
     questionController.fetchQuestions();
@@ -56,7 +56,7 @@ class _QuizScreenState extends State<QuizScreen> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
-                      // child: ProgressBar(),
+                      child: ProgressBar(),
                     ),
                     const SizedBox(height: 20.0),
                     Row(
