@@ -9,7 +9,6 @@ class QuestionCard extends StatelessWidget {
     Key? key,
     required this.question,
   }) : super(key: key);
-
   final QuizModel question;
 
   @override
@@ -25,7 +24,7 @@ class QuestionCard extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            question.question!,
+            question.question,
             style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
@@ -33,9 +32,9 @@ class QuestionCard extends StatelessWidget {
             ),
           ),
           ...List.generate(
-            question.option!.length,
+            question.option.length,
             (index) => Option(
-              text: question.option![index],
+              text: question.option[index],
               index: index,
               press: () {
                 questionController.checkAns(question, index);

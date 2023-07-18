@@ -90,21 +90,58 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
               },
               calendarBuilders: CalendarBuilders(
                 defaultBuilder: (context, date, _) {
-                  if (selectedDates
-                      .contains(DateTime(date.year, date.month, date.day))) {
-                    return Container(
-                      width: 25,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.yellow,
-                      ),
-                      child: Center(
-                        child: Text(
-                          '${date.day}',
-                          style: const TextStyle(color: Colors.black),
+                  DateTime dateTime = DateTime(date.year, date.month, date.day);
+                  List<CardItem> events = fakeCardItems
+                      .where((item) =>
+                          item.date == DateFormat.yMd().format(dateTime))
+                      .toList();
+                  bool allEventsChecked = events.every((item) => item.status);
+
+                  if (selectedDates.contains(dateTime)) {
+                    if (dateTime.isBefore(DateTime.now()) && allEventsChecked) {
+                      return Container(
+                        width: 25,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.green,
                         ),
-                      ),
-                    );
+                        child: Center(
+                          child: Text(
+                            '${date.day}',
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      );
+                    } else if (dateTime.isBefore(DateTime.now()) &&
+                        !allEventsChecked) {
+                      return Container(
+                        width: 25,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.red,
+                        ),
+                        child: Center(
+                          child: Text(
+                            '${date.day}',
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      );
+                    } else if (dateTime.isAfter(DateTime.now())) {
+                      return Container(
+                        width: 25,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.yellow,
+                        ),
+                        child: Center(
+                          child: Text(
+                            '${date.day}',
+                            style: const TextStyle(color: Colors.black),
+                          ),
+                        ),
+                      );
+                    }
                   }
                   return null;
                 },

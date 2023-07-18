@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:app_chat/quiz_service/quiz_model.dart';
 import 'package:app_chat/quiz_service/quiz_service.dart';
 import 'package:dio/dio.dart';
@@ -19,11 +21,16 @@ void main() async {
   NotificationService().initializeNotification();
   await NotificationService().showMatchingNotifications();
   try {
-    final quizData = await quizService.getQuizData();
-    processQuizList(quizData);
-    // Xử lý dữ liệu quizData nhận được từ API ở đây
+    final List<dynamic> quizData = await quizService.getQuizData();
+
+    for (var question in quizData) {
+      print('Question: ${question.question}');
+      print('Options: ${question.option}');
+      print('Answer Index: ${question.answerIndex}');
+      print('ID: ${question.id}');
+      print('----------------');
+    }
   } catch (error) {
-    // Xử lý lỗi khi gọi API
     print('Error: $error');
   }
 
@@ -48,20 +55,6 @@ void main() async {
       child: const MyApp(),
     ),
   );
-}
-
-void processQuizList(List<dynamic> quizData) {
-  final List<QuizModel> questions = quizData
-      .map((json) => QuizModel.fromJson(json as Map<String, dynamic>))
-      .toList();
-
-  for (var question in questions) {
-    print('Question: ${question.question}');
-    print('Options: ${question.option}');
-    print('Answer Index: ${question.answerIndex}');
-    print('ID: ${question.id}');
-    print('----------------');
-  }
 }
 
 class MyApp extends StatefulWidget {

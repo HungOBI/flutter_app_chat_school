@@ -1,3 +1,5 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:app_chat/quiz_service/quiz_model.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';

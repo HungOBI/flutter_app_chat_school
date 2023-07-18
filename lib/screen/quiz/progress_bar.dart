@@ -19,12 +19,21 @@ class _ProgressBarState extends State<ProgressBar>
   void initState() {
     super.initState();
     _animationController =
-        AnimationController(duration: Duration(seconds: 10), vsync: this);
+        AnimationController(duration: Duration(seconds: 30), vsync: this);
     _animation =
         Tween<double>(begin: 1.0, end: 0.0).animate(_animationController)
           ..addListener(() {
             setState(() {});
           });
+    _animationController.reverse(from: 1.0);
+  }
+
+  void stopAnimation() {
+    _animationController.stop();
+  }
+
+  void resetAnimation() {
+    _animationController.reset();
     _animationController.reverse(from: 1.0);
   }
 
@@ -74,7 +83,7 @@ class _ProgressBarState extends State<ProgressBar>
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text("${(_animation.value * 10).round()} sec"),
+                      Text("${(_animation.value * 30).round()} sec"),
                       const Icon(Icons.lock_clock),
                     ],
                   ),

@@ -19,27 +19,27 @@ class NotificationService {
     await flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
 
-  Future<void> showNotification(int id, String title, String body) async {
-    var dateTime = DateTime(DateTime.now().year, DateTime.now().month,
-        DateTime.now().day, 14, 47, 0);
-    tz.initializeTimeZones();
-    await flutterLocalNotificationsPlugin.zonedSchedule(
-      id,
-      title,
-      body,
-      tz.TZDateTime.from(dateTime, tz.local),
-      NotificationDetails(
-        android: AndroidNotificationDetails(id.toString(), 'Go To Bed',
-            importance: Importance.max,
-            priority: Priority.max,
-            icon: '@mipmap/ic_launcher'),
-      ),
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
-      androidAllowWhileIdle: true,
-      matchDateTimeComponents: DateTimeComponents.time,
-    );
-  }
+  // Future<void> showNotification(int id, String title, String body) async {
+  //   var dateTime = DateTime(DateTime.now().year, DateTime.now().month,
+  //       DateTime.now().day, 14, 47, 0);
+  //   tz.initializeTimeZones();
+  //   await flutterLocalNotificationsPlugin.zonedSchedule(
+  //     id,
+  //     title,
+  //     body,
+  //     tz.TZDateTime.from(dateTime, tz.local),
+  //     NotificationDetails(
+  //       android: AndroidNotificationDetails(id.toString(), 'Go To Bed',
+  //           importance: Importance.max,
+  //           priority: Priority.max,
+  //           icon: '@mipmap/ic_launcher'),
+  //     ),
+  //     uiLocalNotificationDateInterpretation:
+  //         UILocalNotificationDateInterpretation.absoluteTime,
+  //     androidAllowWhileIdle: true,
+  //     matchDateTimeComponents: DateTimeComponents.time,
+  //   );
+  // }
 
   Future<void> showMatchingNotifications() async {
     List<DateTime> timetable = await DatabaseHelper().getAllDateTime();
@@ -57,8 +57,8 @@ class NotificationService {
 
   Future<void> _showNotification(DateTime dateTime) async {
     int notificationId = 1;
-    String notificationTitle = "tttttt";
-    String notificationBody = "bbbbbbb";
+    String notificationTitle = "App_School";
+    String notificationBody = "You have event";
 
     tz.initializeTimeZones();
     await flutterLocalNotificationsPlugin.zonedSchedule(
