@@ -1,6 +1,5 @@
 // ignore_for_file: avoid_print
 
-import 'package:app_chat/quiz_service/quiz_model.dart';
 import 'package:app_chat/quiz_service/quiz_service.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +12,8 @@ import 'package:app_chat/screen/home/home_screen.dart';
 import 'package:app_chat/shared/constants.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
+
+import 'screen/quiz/score_screen.dart';
 
 void main() async {
   final dio = Dio();

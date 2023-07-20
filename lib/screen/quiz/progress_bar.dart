@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -19,7 +21,7 @@ class _ProgressBarState extends State<ProgressBar>
   void initState() {
     super.initState();
     _animationController =
-        AnimationController(duration: Duration(seconds: 30), vsync: this);
+        AnimationController(duration: const Duration(seconds: 30), vsync: this);
     _animation =
         Tween<double>(begin: 1.0, end: 0.0).animate(_animationController)
           ..addListener(() {

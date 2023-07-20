@@ -1,12 +1,16 @@
+import 'package:app_chat/controllers/question_controller.dart';
+import 'package:app_chat/screen/home/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ScoreScreen extends StatelessWidget {
-  final int score;
-
-  const ScoreScreen({Key? key, required this.score}) : super(key: key);
+  const ScoreScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final questionController = Provider.of<QuestionController>(context);
+    final score = questionController.numOfCorrectAns;
+    // questionController.resetQuiz();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Score'),
@@ -17,14 +21,17 @@ class ScoreScreen extends StatelessWidget {
           children: [
             Text(
               'Your Score: $score',
-              style: TextStyle(fontSize: 24),
+              style: const TextStyle(fontSize: 24),
             ),
-            const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => const HomeScreen()),
+                  (route) => false,
+                );
               },
-              child: const Text('Go Back'),
+              child: const Text('Back Home'),
             ),
           ],
         ),

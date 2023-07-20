@@ -3,15 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:dio/dio.dart';
 import '../quiz_service/quiz_model.dart';
+import '../screen/quiz/score_screen.dart';
 
-final questionControllerProvider = ChangeNotifierProvider<QuestionController>(
+final questionControllerProvider = ChangeNotifierProvider(
   create: (ref) => QuestionController(),
 );
 
 class QuestionController extends ChangeNotifier {
   PageController? _pageController;
   PageController? get pageController => _pageController;
-  bool _isAnimationStopped = false;
+  final bool _isAnimationStopped = false;
   bool get isAnimationStopped => _isAnimationStopped;
   List<QuizModel> _questions = [];
   List<QuizModel> get questions => _questions;
@@ -31,6 +32,8 @@ class QuestionController extends ChangeNotifier {
   int _numOfCorrectAns = 0;
   int get numOfCorrectAns => _numOfCorrectAns;
 
+  bool _quizEnded = false;
+  bool get quizEnded => _quizEnded;
   @override
   void dispose() {
     _pageController?.dispose();
@@ -43,7 +46,7 @@ class QuestionController extends ChangeNotifier {
       final dio = Dio();
       final quizService = QuizService(dio);
       _questions = await quizService.getQuizData();
-      print('object: $_questions');
+
       notifyListeners();
     } catch (error) {
       // Handle error
@@ -70,23 +73,34 @@ class QuestionController extends ChangeNotifier {
     if (_correctAns == _selectedAns) {
       _numOfCorrectAns++;
     }
-
+    furtherQuestion();
     notifyListeners();
+  }
+
+  void furtherQuestion() {
     Future.delayed(const Duration(seconds: 1), () {
-      nextQuestion();
+      _isAnswered = false;
+      if (_questionNumber != _questions.length) {
+        _pageController!.nextPage(
+          duration: const Duration(milliseconds: 50),
+          curve: Curves.ease,
+        );
+      } else {
+        _quizEnded = true;
+      }
+      notifyListeners();
     });
   }
 
-  void nextQuestion() {
+  void nextQuestion(BuildContext context) {
     if (_questionNumber != _questions.length) {
-      _isAnswered = false;
-      _pageController!
-          .nextPage(duration: Duration(milliseconds: 50), curve: Curves.ease);
+      _pageController!.nextPage(
+          duration: const Duration(milliseconds: 50), curve: Curves.ease);
     } else {
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => ScoreScreen()),
-      // );
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const ScoreScreen()),
+      );
     }
     notifyListeners();
   }

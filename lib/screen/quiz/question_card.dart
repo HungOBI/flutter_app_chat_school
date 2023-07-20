@@ -5,7 +5,7 @@ import '../../quiz_service/quiz_model.dart';
 import 'option.dart';
 
 class QuestionCard extends StatelessWidget {
-  QuestionCard({
+  const QuestionCard({
     Key? key,
     required this.question,
   }) : super(key: key);

@@ -73,8 +73,11 @@ class _ProfileScreen extends State<ProfileScreen> {
                     borderRadius: BorderRadius.circular(20.0),
                     color: Colors.white,
                   ),
-                  child: const Center(
-                    child: Row(
+                  child: TextButton(
+                    onPressed: () {
+                      _updateUserData();
+                    },
+                    child: const Row(
                       children: [
                         Padding(
                           padding: EdgeInsets.fromLTRB(5, 7, 5, 7),
@@ -225,26 +228,27 @@ class _ProfileScreen extends State<ProfileScreen> {
 
   Future<void> _uploadAndSetNewImage() async {
     String? userEmail = FirebaseAuth.instance.currentUser!.email;
-
     String oldImage = _userImage;
-    if (oldImage.isNotEmpty) {
-      await FirebaseStorage.instance.refFromURL(oldImage).delete();
-    }
-
     String newImagePath = '${DateTime.now()}.png';
     final Reference storageRef =
         FirebaseStorage.instance.ref().child(newImagePath);
-
     final UploadTask uploadTask = storageRef.putFile(_newImage!);
     final TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() {});
-
     final imageUrl = await taskSnapshot.ref.getDownloadURL();
-
-    await FirebaseFirestore.instance
+    if (oldImage.isNotEmpty) {
+      await FirebaseStorage.instance.refFromURL(oldImage).delete();
+    }
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection('users')
-        .doc(userEmail)
-        .update({'image': imageUrl});
+        .where('email', isEqualTo: userEmail)
+        .get();
 
+    if (querySnapshot.docs.isNotEmpty) {
+      DocumentSnapshot userSnapshot = querySnapshot.docs.first;
+      await userSnapshot.reference.update({
+        'image': imageUrl,
+      });
+    }
     setState(() {
       _userImage = imageUrl;
     });
@@ -282,6 +286,27 @@ class _ProfileScreen extends State<ProfileScreen> {
         _dateOfBirth.text = userDateOfBirth;
         _parmanentAdd.text = userAdress;
         _isLoading = false;
+      });
+    }
+  }
+
+  void _updateUserData() async {
+    String? userEmail = FirebaseAuth.instance.currentUser!.email;
+
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .where('email', isEqualTo: userEmail)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      DocumentSnapshot userSnapshot = querySnapshot.docs.first;
+
+      String newAdharNo = _adharNo.text;
+      String newAcademicYear = _academicYear.text;
+
+      await userSnapshot.reference.update({
+        'adhar_no': newAdharNo,
+        'academic_year': newAcademicYear,
       });
     }
   }
