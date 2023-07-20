@@ -18,9 +18,7 @@ class _QuizScreenState extends State<QuizScreen> {
     final questionController =
         Provider.of<QuestionController>(context, listen: false);
     questionController.fetchQuestions();
-    if (questionController.quizEnded) {
-      questionController.nextQuestion(context);
-    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(40, 85, 174, 1),

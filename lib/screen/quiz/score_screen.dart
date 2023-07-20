@@ -10,21 +10,31 @@ class ScoreScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final questionController = Provider.of<QuestionController>(context);
     final score = questionController.numOfCorrectAns;
-    // questionController.resetQuiz();
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Score'),
-      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            const Text(
+              'Your Score',
+              style: TextStyle(
+                  fontSize: 24, color: Color.fromARGB(255, 204, 250, 0)),
+            ),
+            const SizedBox(
+              height: 50,
+            ),
             Text(
-              'Your Score: $score',
-              style: const TextStyle(fontSize: 24),
+              '$score',
+              style: const TextStyle(
+                  fontSize: 100, color: Color.fromARGB(255, 204, 250, 0)),
+            ),
+            const SizedBox(
+              height: 250,
             ),
             ElevatedButton(
               onPressed: () {
+                questionController.resetQuiz();
                 Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(builder: (context) => const HomeScreen()),

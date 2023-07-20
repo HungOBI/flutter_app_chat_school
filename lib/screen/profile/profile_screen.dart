@@ -79,12 +79,12 @@ class _ProfileScreen extends State<ProfileScreen> {
                     },
                     child: const Row(
                       children: [
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(5, 7, 5, 7),
-                          child: Icon(
-                            Icons.check,
-                            color: Color.fromRGBO(40, 85, 174, 1),
-                          ),
+                        Icon(
+                          Icons.check,
+                          color: Color.fromRGBO(40, 85, 174, 1),
+                        ),
+                        SizedBox(
+                          width: 5,
                         ),
                         Text(
                           "DONE",
@@ -307,6 +307,10 @@ class _ProfileScreen extends State<ProfileScreen> {
       await userSnapshot.reference.update({
         'adhar_no': newAdharNo,
         'academic_year': newAcademicYear,
+      }).then((_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Update information successfully!')),
+        );
       });
     }
   }

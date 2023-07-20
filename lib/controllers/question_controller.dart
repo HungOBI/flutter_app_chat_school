@@ -79,7 +79,6 @@ class QuestionController extends ChangeNotifier {
 
   void furtherQuestion() {
     Future.delayed(const Duration(seconds: 1), () {
-      _isAnswered = false;
       if (_questionNumber != _questions.length) {
         _pageController!.nextPage(
           duration: const Duration(milliseconds: 50),
@@ -88,6 +87,7 @@ class QuestionController extends ChangeNotifier {
       } else {
         _quizEnded = true;
       }
+      _isAnswered = false;
       notifyListeners();
     });
   }
@@ -97,11 +97,15 @@ class QuestionController extends ChangeNotifier {
       _pageController!.nextPage(
           duration: const Duration(milliseconds: 50), curve: Curves.ease);
     } else {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const ScoreScreen()),
-      );
+      goToScore(context);
     }
     notifyListeners();
+  }
+
+  void goToScore(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const ScoreScreen()),
+    );
   }
 }
