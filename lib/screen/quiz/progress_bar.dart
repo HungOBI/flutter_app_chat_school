@@ -21,7 +21,7 @@ class _ProgressBarState extends State<ProgressBar>
   void initState() {
     super.initState();
     _animationController =
-        AnimationController(duration: const Duration(seconds: 30), vsync: this);
+        AnimationController(duration: const Duration(seconds: 20), vsync: this);
     _animation =
         Tween<double>(begin: 1.0, end: 0.0).animate(_animationController)
           ..addListener(() {
@@ -52,6 +52,19 @@ class _ProgressBarState extends State<ProgressBar>
 
   @override
   Widget build(BuildContext context) {
+    final questionController =
+        Provider.of<QuestionController>(context, listen: false);
+    if (questionController.questionNumber ==
+        questionController.questions.length) {
+      stopAnimation();
+      // questionController.nextQuestion(context);
+    }
+    if (questionController.isAnswered == true) {
+      stopAnimation();
+
+      resetAnimation();
+    }
+
     return Container(
       width: double.infinity,
       height: 35,
@@ -85,7 +98,7 @@ class _ProgressBarState extends State<ProgressBar>
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text("${(_animation.value * 30).round()} sec"),
+                      Text("${(_animation.value * 20).round()} sec"),
                       const Icon(Icons.lock_clock),
                     ],
                   ),

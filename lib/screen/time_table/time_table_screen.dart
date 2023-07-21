@@ -79,7 +79,7 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                 ),
                 weekendTextStyle: TextStyle(color: Colors.red),
               ),
-              focusedDay: today,
+              focusedDay: DateTime.now(),
               firstDay: DateTime.utc(2023, 1, 1),
               lastDay: DateTime.utc(2033, 1, 1),
               onDaySelected: (selectedDay, focusedDay) {
@@ -351,13 +351,12 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
 
     setState(() {
       fakeCardItems = data.map((row) {
-        print('ddataa ${row['status']}  ${row['5']}');
         return CardItem(
           time: row['time'],
           date: row['date'],
           title: row['title'],
           content: row['content'],
-          status: int.parse(row['status']) == 1,
+          status: row['status'] == 1,
           id: row['id'],
           onDelete: (int id) {
             _deleteCardItem(id);
