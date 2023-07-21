@@ -102,9 +102,9 @@ class _ProfileScreen extends State<ProfileScreen> {
             ),
             body: SingleChildScrollView(
               child: Container(
-                margin: const EdgeInsets.only(top: 36),
+                margin: const EdgeInsets.only(top: 10),
                 width: double.maxFinite,
-                height: MediaQuery.of(context).size.height,
+                height: MediaQuery.of(context).size.height * 0.9,
                 decoration: const BoxDecoration(
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(30),
@@ -113,7 +113,8 @@ class _ProfileScreen extends State<ProfileScreen> {
                   color: Color.fromRGBO(255, 255, 255, 1),
                 ),
                 child: Container(
-                  margin: const EdgeInsets.only(top: 18, left: 18, right: 18),
+                  margin: const EdgeInsets.only(
+                      top: 18, left: 18, right: 18, bottom: 0),
                   child: Column(
                     children: [
                       Container(

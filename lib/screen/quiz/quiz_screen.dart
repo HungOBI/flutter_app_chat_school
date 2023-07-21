@@ -36,7 +36,7 @@ class _QuizScreenState extends State<QuizScreen> {
               questionController.nextQuestion(context);
             },
             child: const Text(
-              'Skip',
+              'Submit',
               style: TextStyle(
                 fontSize: 18,
                 color: Colors.white,

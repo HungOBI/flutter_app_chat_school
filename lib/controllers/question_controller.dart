@@ -12,7 +12,7 @@ final questionControllerProvider = ChangeNotifierProvider(
 class QuestionController extends ChangeNotifier {
   PageController? _pageController;
   PageController? get pageController => _pageController;
-  final bool _isAnimationStopped = false;
+  late bool _isAnimationStopped = false;
   bool get isAnimationStopped => _isAnimationStopped;
   List<QuizModel> _questions = [];
   List<QuizModel> get questions => _questions;
@@ -81,13 +81,14 @@ class QuestionController extends ChangeNotifier {
     Future.delayed(const Duration(seconds: 1), () {
       if (_questionNumber != _questions.length) {
         _pageController!.nextPage(
-          duration: const Duration(milliseconds: 50),
+          duration: const Duration(milliseconds: 200),
           curve: Curves.ease,
         );
       } else {
         _quizEnded = true;
       }
       _isAnswered = false;
+
       notifyListeners();
     });
   }
@@ -97,15 +98,11 @@ class QuestionController extends ChangeNotifier {
       _pageController!.nextPage(
           duration: const Duration(milliseconds: 50), curve: Curves.ease);
     } else {
-      goToScore(context);
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const ScoreScreen()),
+      );
     }
     notifyListeners();
-  }
-
-  void goToScore(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const ScoreScreen()),
-    );
   }
 }

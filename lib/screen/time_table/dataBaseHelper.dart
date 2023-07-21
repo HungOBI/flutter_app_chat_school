@@ -37,7 +37,7 @@ class DatabaseHelper {
         date TEXT,
         title TEXT,
         content TEXT,
-        status BIT,
+        status BIT
       )
     ''');
   }

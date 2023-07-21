@@ -52,7 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             const SizedBox(
-              height: 23.23,
+              height: 23,
             ),
             const Padding(
               padding: EdgeInsets.only(left: 30),
@@ -84,7 +84,7 @@ class _LoginScreenState extends State<LoginScreen> {
               height: 30,
             ),
             Container(
-              height: MediaQuery.of(context).size.height,
+              height: MediaQuery.of(context).size.height * 0.65,
               decoration: const BoxDecoration(
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(30),
