@@ -104,7 +104,7 @@ class _ProfileScreen extends State<ProfileScreen> {
               child: Container(
                 margin: const EdgeInsets.only(top: 10),
                 width: double.maxFinite,
-                height: MediaQuery.of(context).size.height * 0.9,
+                height: MediaQuery.of(context).size.height,
                 decoration: const BoxDecoration(
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(30),

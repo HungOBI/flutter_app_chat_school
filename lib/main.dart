@@ -19,19 +19,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   NotificationService().initializeNotification();
   await NotificationService().showMatchingNotifications();
-  try {
-    final List<dynamic> quizData = await quizService.getQuizData();
 
-    for (var question in quizData) {
-      print('Question: ${question.question}');
-      print('Options: ${question.option}');
-      print('Answer Index: ${question.answerIndex}');
-      print('ID: ${question.id}');
-      print('----------------');
-    }
-  } catch (error) {
-    print('Error: $error');
-  }
 
   if (kIsWeb) {
     await Firebase.initializeApp(
