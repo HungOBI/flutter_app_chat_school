@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_vlc_player/flutter_vlc_player.dart';
 
-class LectureScreen extends StatelessWidget {
+
+class LectureScreen extends StatefulWidget {
   final String videoUrl;
   final String lectureTitle;
   final String lectureContent;
@@ -10,6 +12,31 @@ class LectureScreen extends StatelessWidget {
     required this.lectureTitle,
     required this.lectureContent,
   });
+
+  @override
+  State<LectureScreen> createState() => _LectureScreenState();
+}
+
+class _LectureScreenState extends State<LectureScreen> {
+  late VlcPlayerController _videoPlayerController;
+
+  @override
+  void initState() {
+    super.initState();
+    _videoPlayerController = VlcPlayerController.network(
+      'https://www.youtube.com/watch?v=dnB9x3OaSH0',
+      hwAcc: HwAcc.full,
+      autoPlay: false,
+      options: VlcPlayerOptions(),
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _videoPlayerController.stopRendererScanning();
+    _videoPlayerController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,16 +53,15 @@ class LectureScreen extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
-          Container(
-            height: 200,
-            color: Colors.grey,
-
+          VlcPlayer(
+            controller: _videoPlayerController,
+            aspectRatio: 16 / 9,
+            placeholder: Center(child: CircularProgressIndicator()),
           ),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Text(
-              lectureTitle,
+              widget.lectureTitle,
               style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -45,7 +71,7 @@ class LectureScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Text(
-              lectureContent,
+              widget.lectureContent,
               style: const TextStyle(fontSize: 16),
             ),
           ),

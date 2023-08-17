@@ -88,7 +88,6 @@ class QuestionController extends ChangeNotifier {
         _quizEnded = true;
       }
       _isAnswered = false;
-
       notifyListeners();
     });
   }

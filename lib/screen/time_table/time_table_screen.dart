@@ -18,6 +18,7 @@ class TimeTableScreen extends StatefulWidget {
 class _TimeTableScreenState extends State<TimeTableScreen> {
   DateTime today = DateTime.now();
   DateTime selectedDay = DateTime.now();
+  bool hasSelectedDay = false; 
   List<CardItem> fakeCardItems = [];
   late DatabaseHelper databaseHelper;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -79,13 +80,14 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                 ),
                 weekendTextStyle: TextStyle(color: Colors.red),
               ),
-              focusedDay: DateTime.now(),
+               focusedDay: hasSelectedDay ? selectedDay : DateTime.now(),
               firstDay: DateTime.utc(2023, 1, 1),
               lastDay: DateTime.utc(2033, 1, 1),
               onDaySelected: (selectedDay, focusedDay) {
                 setState(() {
                   this.selectedDay = selectedDay;
                   selectedDate = selectedDay;
+                  hasSelectedDay = true;
                 });
               },
               calendarBuilders: CalendarBuilders(
@@ -297,8 +299,8 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
 
 // add event
   void _addCardItem() async {
-    String time = DateFormat.Hm().format(today);
-    String date = DateFormat.yMd().format(today);
+    String time = DateFormat.Hm().format(selectedDay);
+    String date = DateFormat.yMd().format(selectedDay);
     String title = _titleController.text;
     String content = _contentController.text;
 
@@ -376,6 +378,7 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
   }
 
 // select time in add event
+ // select time in add event
   Future<void> _selectTime() async {
     final TimeOfDay? selectedTime = await showTimePicker(
       context: context,

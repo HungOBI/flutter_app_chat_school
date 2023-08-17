@@ -56,6 +56,10 @@ dependencies:
   retrofit_generator: ^7.0.8
   hooks_riverpod: ^2.3.6
   flutter_timer_countdown: ^1.0.5
+  flutter_vlc_player: ^7.2.0
+  chewie: ^1.7.0
+  video_player: ^2.7.0
+
 
 dev_dependencies:
   flutter_test:

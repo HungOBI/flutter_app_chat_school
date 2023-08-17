@@ -1,4 +1,5 @@
 import 'package:app_chat/screen/video/custom_card_video.dart';
+import 'package:app_chat/screen/video/lesson_video.dart';
   import 'package:cloud_firestore/cloud_firestore.dart';
   import 'package:flutter/material.dart';
 
@@ -52,10 +53,24 @@ import 'package:app_chat/screen/video/custom_card_video.dart';
                 child: ListView.builder(
                   itemCount: _lessons.length,
                   itemBuilder: (context, index) {
-                    return buildLessonCard(
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => LectureScreen(
+                              lectureTitle: _lessons[index]['lessonName']!,
+                              videoUrl: _lessons[index]['videoURL']!,
+                              lectureContent: _lessons[index]['lessonContent']!,
+                            ),
+                          ),
+                        );
+                      },
+                    child: buildLessonCard(
                       _lessons[index]['lessonName'],
                       _lessons[index]['teacher'],
                       _lessons[index]['lessonContent'],
+                    ),
                     );
                   },
                 ),
@@ -78,11 +93,13 @@ import 'package:app_chat/screen/video/custom_card_video.dart';
         String lessonName = doc.get('lesson_name');
         String teacher = doc.get('teacher');
         String lessonContent = doc.get('lesson_content');
+        String videoURL = doc.get('video');
 
         lessons.add({
           'lessonName': lessonName,
           'teacher': teacher,
           'lessonContent': lessonContent,
+          'videoURL' :videoURL,
         });
       }
 

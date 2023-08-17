@@ -38,7 +38,7 @@ class ScoreScreen extends StatelessWidget {
                 Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(builder: (context) => const HomeScreen()),
-                  (route) => false,
+                      (route) => false,
                 );
               },
               child: const Text('Back Home'),
