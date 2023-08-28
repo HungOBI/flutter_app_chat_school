@@ -1,8 +1,7 @@
-// ignore_for_file: library_private_types_in_public_api
+// ignore_for_file: library_private_types_in_public_api, unused_local_variable
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../../controllers/question_controller.dart';
 
 class ProgressBar extends StatefulWidget {
@@ -21,13 +20,20 @@ class _ProgressBarState extends State<ProgressBar>
   void initState() {
     super.initState();
     _animationController =
-        AnimationController(duration: const Duration(seconds: 5), vsync: this);
+        AnimationController(duration: const Duration(seconds: 100), vsync: this);
     _animation =
         Tween<double>(begin: 1.0, end: 0.0).animate(_animationController)
           ..addListener(() {
             setState(() {});
           });
     _animationController.reverse(from: 1.0);
+    _animationController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        final questionController =
+            Provider.of<QuestionController>(context, listen: false);
+        questionController.fetchQuestions();
+      }
+    });
   }
 
   void stopAnimation() {
@@ -54,16 +60,7 @@ class _ProgressBarState extends State<ProgressBar>
   Widget build(BuildContext context) {
     final questionController =
         Provider.of<QuestionController>(context, listen: false);
-    if (questionController.questionNumber ==
-        questionController.questions.length) {
-      stopAnimation();
-       questionController.nextQuestion(context);
-       resetAnimation();
-    }
-    if (questionController.isAnswered == true) {
-      stopAnimation();
-      resetAnimation();
-    }
+   
     return Container(
       width: double.infinity,
       height: 35,
@@ -97,7 +94,7 @@ class _ProgressBarState extends State<ProgressBar>
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text("${(_animation.value * 5).round()} sec"),
+                      Text("${(_animation.value * 100).round()} sec"),
                       const Icon(Icons.lock_clock),
                     ],
                   ),

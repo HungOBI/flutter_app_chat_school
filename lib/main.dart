@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, unused_local_variable
 
 import 'package:app_chat/quiz_service/quiz_service.dart';
 import 'package:dio/dio.dart';
@@ -19,7 +19,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   NotificationService().initializeNotification();
   await NotificationService().showMatchingNotifications();
-
 
   if (kIsWeb) {
     await Firebase.initializeApp(

@@ -5,7 +5,6 @@ import 'package:app_chat/screen/auth/login_screen.dart';
 import 'package:app_chat/screen/groupChat/group_chat_screen.dart';
 import 'package:app_chat/screen/profile/profile_screen.dart';
 import 'package:app_chat/screen/quiz/quiz_screen.dart';
-import 'package:app_chat/screen/video/video_screen.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -34,9 +33,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-
     getUserData();
-  }
+    }
 
   @override
   Widget build(BuildContext context) {
@@ -200,17 +198,17 @@ class _HomeScreenState extends State<HomeScreen> {
                               );
                             },
                           ),
-                          customCard(
-                              text: 'School Gallery',
-                              imagePath: 'assets/images/ic_gallery_home.png',
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                    const VideoScreen()),
-                              );
-                            },),
+                          // customCard(
+                          //     text: 'School Gallery',
+                          //     imagePath: 'assets/images/ic_gallery_home.png',
+                          //   onTap: () {
+                          //     Navigator.push(
+                          //       context,
+                          //       MaterialPageRoute(
+                          //           builder: (context) =>
+                          //           const VideoScreen()),
+                          //     );
+                          //   },),
                           // customCard(
                           //     text: 'Leave Application',
                           //     imagePath: 'assets/images/ic_leave_home.png'),
